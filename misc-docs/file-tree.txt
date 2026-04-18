@@ -1,0 +1,50 @@
+/watchr
+├── .gitignore
+├── .env
+├── .env.local
+├── astro.config.mjs
+├── package.json
+├── package-lock.json
+├── public
+│   ├── favicon.png
+│   ├── manifest.webmanifest
+│   └── icons
+│       ├── icon-192.png
+│       └── icon-512.png
+├── src
+│   ├── components
+│   │   ├── AddRecForm.jsx
+│   │   ├── GuideCard.jsx
+│   │   ├── GuideGrid.jsx
+│   │   ├── HomeActions.jsx
+│   │   ├── NotificationIndicator.jsx
+│   │   ├── RatingFlow.jsx
+│   │   ├── RevealFlow.jsx
+│   │   ├── StatusSelector.jsx
+│   │   ├── TacoScale.jsx
+│   │   └── HotTakePrompt.jsx
+│   ├── layouts
+│   │   └── BaseLayout.astro
+│   ├── lib
+│   │   ├── constants.js
+│   │   ├── neon.js
+│   │   ├── loops.js
+│   │   ├── recommendations.js
+│   │   ├── reactions.js
+│   │   ├── notifications.js
+│   │   └── reveal-lock.js
+│   ├── pages
+│   │   ├── index.astro
+│   │   ├── drop-a-rec.astro
+│   │   ├── guide.astro
+│   │   └── reveal.astro
+│   └── styles
+│       └── globals.css
+└── misc-docs
+    ├── prd.md
+    ├── mvp-spec.md
+    ├── future-spec.md
+    ├── tech-spec.md
+    ├── build-instructions.md
+    ├── vibe-coder-prep.md
+    └── file-tree.txt

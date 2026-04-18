@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GuideGrid from '../components/GuideGrid';
+import NotificationIndicator from '../components/NotificationIndicator';
+import { ChevronLeft, Plus } from 'lucide-react';
+---
+
+<BaseLayout title="Shared Guide">
+    <div class="flex flex-col gap-12">
+        <header class="flex flex-col gap-6">
+            <div class="flex justify-between items-start">
+                <a href="/" class="group flex items-center gap-2 text-brand-muted hover:text-totes-turquoise transition-colors w-fit pt-2">
+                    <ChevronLeft size={16} class="transition-transform group-hover:-translate-x-1" />
+                    <span class="text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase">Home</span>
+                </a>
+                
+                <div class="flex flex-col items-end gap-4">
+                    <NotificationIndicator client:load count={1} />
+                    <a href="/drop-a-rec" class="flex items-center gap-2 bg-totes-turquoise/10 hover:bg-totes-turquoise/20 text-totes-turquoise px-4 py-2 rounded-full border border-totes-turquoise/30 transition-all text-[10px] font-urbanist font-bold tracking-widest uppercase">
+                        <Plus size={14} />
+                        Drop a Rec
+                    </a>
+                </div>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+                Personal <span class="text-electric-purple">Guide</span>
+            </h1>
+        </header>
+
+        <GuideGrid client:load />
+    </div>
+</BaseLayout>

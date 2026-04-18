@@ -1,0 +1,17 @@
+{
+  "name": "Watchr",
+  "short_name": "Watchr",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "description": "Shared streaming ritual with your favorite human.",
+  "icons": [
+    {
+      "src": "/image.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HomeActions from "../components/HomeActions";
+---
+
+<BaseLayout title="Home">
+	<div
+		class="h-full flex flex-col items-start justify-center pt-16 md:pt-24 min-h-[50svh]"
+	>
+		<h1
+			class="text-4xl md:text-5xl mb-4 tracking-tighter text-linear-to-r from-brand-text to-brand-muted bg-clip-text text-transparent"
+		>
+			Watchr
+		</h1>
+
+		<HomeActions client:load />
+	</div>
+</BaseLayout>

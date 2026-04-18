@@ -1,0 +1,75 @@
+---
+import '../styles/globals.css';
+import Header from '../components/Header.astro';
+interface Props {
+	title?: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Watchr - Shared streaming recommendations" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="icon" type="image/png" href="/image.png" sizes="1024x1024" />
+		<link rel="apple-touch-icon" href="/image.png" />
+		<link rel="manifest" href="/manifest.json" />
+		<meta name="theme-color" content="#050505" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title ? `${title} | Watchr` : 'Watchr'}</title>
+	</head>
+	<body class="min-h-svh relative bg-brand-bg text-brand-text font-kumbh selection:bg-totes-turquoise selection:text-brand-bg">
+		<!-- Cinematic Diffusion Glow -->
+		<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none" aria-hidden="true">
+			<div class="absolute -top-[10%] -left-[10%] w-[70%] h-[70%] bg-totes-turquoise/5 blur-[120px] rounded-full opacity-60 animate-pulse" style="animation-duration: 8s;"></div>
+			<div class="absolute -bottom-[10%] -right-[10%] w-[70%] h-[70%] bg-electric-purple/5 blur-[120px] rounded-full opacity-60 animate-pulse" style="animation-duration: 12s;"></div>
+			<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-radial from-transparent via-brand-bg/80 to-brand-bg"></div>
+		</div>
+
+		<div class="relative z-10 w-full max-w-md mx-auto">
+			<Header />
+
+			<main class="py-6 min-h-[60vh] flex flex-col items-center px-4">
+				<slot />
+			</main>
+		</div>
+
+		<!-- Identity Toggle (Local Testing Only) -->
+		<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+            <div class="flex items-center gap-3 bg-brand-bg/80 backdrop-blur-md border border-brand-muted/30 p-2 pl-4 rounded-full shadow-2xl">
+                <span id="current-user-tag" class="text-[10px] text-totes-turquoise font-urbanist font-bold tracking-widest uppercase">
+                    Loading...
+                </span>
+                <button id="toggle-user" class="px-4 py-2 bg-brand-muted/10 hover:bg-brand-muted/20 border border-brand-muted/40 rounded-full text-[9px] font-urbanist font-bold uppercase tracking-widest transition-all active:scale-95">
+                    Switch
+                </button>
+            </div>
+		</div>
+
+		<script>
+			const toggleBtn = document.getElementById('toggle-user');
+			const userTag = document.getElementById('current-user-tag');
+			
+			// Simple local identity toggle
+			function updateUI() {
+                const currentUser = localStorage.getItem('watchr_user') || 'A';
+                if (userTag) userTag.textContent = `Active: User ${currentUser}`;
+            }
+
+			toggleBtn?.addEventListener('click', () => {
+				const currentUser = localStorage.getItem('watchr_user') || 'A';
+				const newUser = currentUser === 'A' ? 'B' : 'A';
+				localStorage.setItem('watchr_user', newUser);
+				updateUI();
+				// Dispatch event for components to listen
+				window.dispatchEvent(new CustomEvent('user-changed', { detail: newUser }));
+				window.location.reload(); 
+			});
+
+            updateUI();
+		</script>
+	</body>
+</html>

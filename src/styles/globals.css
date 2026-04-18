@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #050505;
+  --color-brand-text: #F3F4F6;
+  --color-brand-muted: #5B6B7F;
+  
+  --color-electric-purple: #9b5cff;
+  --color-totes-turquoise: #2de2e6;
+  --color-punk-rock-pink: #ff2f92;
+  --color-screamer-green: #3cff9e;
+  --color-highlighter-yellow: #ffe44d;
+  --color-orange-u-bright: #f97316;
+  
+  --font-urbanist: "Urbanist", sans-serif;
+  --font-kumbh: "Kumbh Sans", sans-serif;
+}
+
+@layer base {
+  @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;700&family=Kumbh+Sans:wght@300;400;600;700&display=swap');
+
+  html, body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-text);
+    font-family: var(--font-kumbh);
+    @apply antialiased overflow-x-hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-urbanist);
+    @apply uppercase tracking-wider font-semibold;
+  }
+}
+
+@layer components {
+  /* Pill Buttons as per vibe-coder-prep.md */
+  .btn-pill {
+    @apply relative inline-flex items-center justify-center px-8 py-3 rounded-full 
+           font-urbanist font-bold uppercase tracking-widest text-sm transition-all duration-300
+           bg-brand-bg text-brand-text cursor-pointer;
+  }
+
+  .btn-pill::before {
+    content: "";
+    @apply absolute -inset-[1px] -z-10 rounded-full bg-linear-to-r from-totes-turquoise to-electric-purple transition-opacity duration-300;
+  }
+
+  .btn-pill:hover {
+    @apply bg-totes-turquoise text-brand-bg scale-105;
+    box-shadow: 0 0 24px rgba(45, 226, 230, 0.4);
+  }
+
+  .btn-pill:hover::before {
+    @apply opacity-0;
+  }
+}

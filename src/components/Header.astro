@@ -1,0 +1,45 @@
+---
+import { Home, LayoutGrid, SquarePlus } from 'lucide-react';
+
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.replace(/\/$/, "");
+
+const navItems = [
+    { icon: Home, path: "", href: "/" },
+    { icon: LayoutGrid, path: "guide", href: "/guide" },
+    { icon: SquarePlus, path: "drop-a-rec", href: "/drop-a-rec" },
+];
+---
+
+<header class="sticky top-0 z-50 w-full pt-6">
+    <div class="flex items-center justify-between backdrop-blur-xl bg-brand-bg/80 border border-brand-muted/10 rounded-2xl h-16 px-5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+        <!-- Logo & Brand -->
+        <a href="/" class="flex items-center gap-3 group">
+            <div class="relative w-8 h-8 rounded-lg overflow-hidden border border-brand-muted/20 group-hover:border-totes-turquoise/50 transition-colors">
+                <img src="/image.png" alt="Watchr" class="w-full h-full object-cover" />
+            </div>
+            <span class="font-urbanist font-bold uppercase tracking-[0.2em] text-sm text-brand-text group-hover:text-totes-turquoise transition-colors">
+                Watchr
+            </span>
+        </a>
+
+        <!-- Navigation Pill -->
+        <nav class="flex items-center p-1.5 bg-brand-muted/5 border border-brand-muted/20 rounded-2xl">
+            {navItems.map(({ icon: Icon, path, href }) => {
+                const isActive = path === "" ? currentPath === "" : currentPath.startsWith(`/${path}`);
+                return (
+                    <a
+                        href={href}
+                        class={`p-2 px-3 transition-all duration-300 flex items-center justify-center rounded-xl
+                            ${isActive 
+                                ? 'bg-totes-turquoise/10 text-totes-turquoise shadow-[0_0_15px_rgba(45,226,230,0.15)] border border-totes-turquoise/20' 
+                                : 'text-brand-muted hover:text-brand-text'
+                            }`}
+                    >
+                        <Icon size={18} strokeWidth={isActive ? 2 : 1.5} />
+                    </a>
+                )
+            })}
+        </nav>
+    </div>
+</header>
