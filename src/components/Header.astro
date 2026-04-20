@@ -11,8 +11,14 @@ const navItems = [
 ];
 ---
 
-<header class="sticky top-0 z-50 w-full pt-6">
-    <div class="flex items-center justify-between backdrop-blur-xl bg-brand-bg/80 border border-brand-muted/10 rounded-2xl h-16 px-5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+<header
+    class="sticky top-0 z-50 w-full bg-brand-bg/60 backdrop-blur-xl backdrop-saturate-150 border-b border-brand-muted/10"
+    style="padding-top: env(safe-area-inset-top);"
+>
+    <div
+        class="mx-auto flex items-center justify-between h-16"
+        style="max-width: var(--shell-max-w); padding-inline: var(--shell-pad-x);"
+    >
         <!-- Logo & Brand -->
         <a href="/" class="flex items-center gap-3 group">
             <div class="relative w-8 h-8 rounded-lg overflow-hidden border border-brand-muted/20 group-hover:border-totes-turquoise/50 transition-colors">
