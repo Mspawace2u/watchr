@@ -134,7 +134,7 @@ const RatingFlow = ({ recId }) => {
             </div>
             <h2 className="text-3xl font-bold tracking-tight">Reveal Ready!</h2>
             <p className="text-brand-muted max-w-xs font-light">Your rating and hot take have been locked. The other user has been notified.</p>
-            <a href="/guide" class="btn-pill mt-8">SWEET, ALL DONE HERE</a>
+            <a href="/guide" className="btn-pill mt-8">SWEET, ALL DONE HERE</a>
           </motion.div>
         )}
 
@@ -151,7 +151,7 @@ const RatingFlow = ({ recId }) => {
             <p className="text-brand-muted max-w-xs font-light">
               {lockedMessage || 'The other user has already viewed this reveal — hot takes lock at that point so the memory stays pure.'}
             </p>
-            <a href="/guide" class="btn-pill mt-8">BACK TO GUIDE</a>
+            <a href="/guide" className="btn-pill mt-8">BACK TO GUIDE</a>
           </motion.div>
         )}
       </AnimatePresence>
