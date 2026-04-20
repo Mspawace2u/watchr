@@ -1,56 +1,66 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { ThumbsUp, ThumbsDown } from 'lucide-react';
 
-const HotTakePrompt = ({ onComplete }) => {
-  const [step, setStep] = useState('prompt'); // 'prompt' | 'input'
+/**
+ * Pages 3 + 4 of the reveal flow.
+ *
+ * Parent (RatingFlow) owns the step state so it can swap the right-nav label
+ * between "HOME ›" (Page 3) and "SKIP IT ›" (Page 4). The mic-recorder /
+ * AI-summarize capture is scoped for a follow-up PR — the current textarea
+ * is wired up on its own and will coexist with a mic button later.
+ */
+const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
   const [hotTake, setHotTake] = useState('');
-
-  const handleChoice = (wantsTo) => {
-    if (wantsTo) {
-      setStep('input');
-    } else {
-      onComplete(null);
-    }
-  };
 
   return (
     <div className="space-y-8">
       <AnimatePresence mode="wait">
-        {step === 'prompt' ? (
-          <motion.div 
+        {step === 'hot-take-prompt' && (
+          <motion.div
             key="prompt"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="flex flex-col gap-8"
+            className="flex flex-col gap-10"
           >
-            <div className="flex items-center gap-3 text-brand-text">
-              <Mic size={20} className="text-totes-turquoise stroke-[1.5px]" />
-              <h3 className="text-xl md:text-2xl font-bold tracking-tight">
-                Drop your 2-sentence hot take?
-              </h3>
-            </div>
+            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-brand-text">
+              Drop your 2-sentence hot take?
+            </h3>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4 w-full max-w-[260px]">
               <button
-                onClick={() => handleChoice(true)}
-                className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl border border-brand-muted/20 hover:border-totes-turquoise hover:bg-totes-turquoise/5 transition-all group"
+                type="button"
+                onClick={() => onChoice(true)}
+                className="btn-pill w-full group"
               >
-                <ThumbsUp size={18} className="text-totes-turquoise stroke-[1.5px]" />
-                <span className="text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase">Yep</span>
+                <span>YEP</span>
+                <ThumbsUp
+                  size={16}
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                  className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                />
               </button>
 
               <button
-                onClick={() => handleChoice(false)}
-                className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl border border-brand-muted/20 hover:border-punk-rock-pink hover:bg-punk-rock-pink/5 transition-all group"
+                type="button"
+                onClick={() => onChoice(false)}
+                className="btn-pill w-full group"
               >
-                <ThumbsDown size={18} className="text-punk-rock-pink stroke-[1.5px]" />
-                <span className="text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase">Naw, I'm Good</span>
+                <span>NAW, I'M GOOD</span>
+                <ThumbsDown
+                  size={16}
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                  className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                />
               </button>
             </div>
           </motion.div>
-        ) : (
+        )}
+
+        {step === 'hot-take-input' && (
           <motion.div
             key="input"
             initial={{ opacity: 0, y: 20 }}
@@ -61,15 +71,19 @@ const HotTakePrompt = ({ onComplete }) => {
               autoFocus
               value={hotTake}
               onChange={(e) => setHotTake(e.target.value)}
-              placeholder="Keep it succinct and spoiler-light..."
-              className="w-full bg-brand-bg border border-brand-muted/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-totes-turquoise/50 transition-all font-light resize-none leading-relaxed min-h-[120px]"
+              placeholder="Type your hot take or record a voice note and AI will jot it in."
+              className="w-full bg-brand-bg border border-brand-muted/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-punk-rock-pink transition-all font-light resize-none leading-relaxed min-h-[120px] placeholder:text-brand-muted/40"
             />
-            <button
-              onClick={() => onComplete(hotTake)}
-              className="btn-pill w-full md:w-auto"
-            >
-              FINISH REVEAL
-            </button>
+
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => onSubmit(hotTake)}
+                className="btn-pill w-full max-w-[260px]"
+              >
+                FINISH REVEAL
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
