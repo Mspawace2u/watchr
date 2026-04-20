@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+:root {
+  /* Canonical shell tokens — shared between Header.astro and <main> so the
+     brand mark in the header aligns pixel-exact with the first card below.
+     See gig-spottr-header-spec.md §2 + §4. */
+  --shell-max-w: 480px;
+  --shell-pad-x: 24px;
+}
+
 @theme {
   --color-brand-bg: #050505;
   --color-brand-text: #F3F4F6;

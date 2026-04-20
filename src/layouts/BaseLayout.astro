@@ -13,7 +13,7 @@ const { title } = Astro.props;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="Watchr - Shared streaming recommendations" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 		<link rel="icon" type="image/png" href="/image.png" sizes="1024x1024" />
 		<link rel="apple-touch-icon" href="/image.png" />
 		<link rel="manifest" href="/manifest.json" />
@@ -35,10 +35,13 @@ const { title } = Astro.props;
 			<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-radial from-transparent via-brand-bg/80 to-brand-bg"></div>
 		</div>
 
-		<div class="relative z-10 w-full max-w-md mx-auto">
+		<div class="relative z-10 flex flex-col min-h-svh">
 			<Header />
 
-			<main class="py-6 min-h-[60vh] flex flex-col items-center px-4">
+			<main
+				class="flex-1 w-full mx-auto flex flex-col py-8 min-h-[60vh]"
+				style="max-width: var(--shell-max-w); padding-inline: var(--shell-pad-x); padding-bottom: calc(2rem + env(safe-area-inset-bottom));"
+			>
 				<slot />
 			</main>
 		</div>
