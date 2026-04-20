@@ -1,0 +1,31 @@
+# devin.yaml — bootstraps Devin sessions for watchr
+#
+# Auto-runs on every Devin session start for this repo.
+# Env-var names below are REFERENCE ONLY — values come from Devin secrets or local `.env`.
+#
+# Env-var reference (see `.env.example` for full list):
+#   - DATABASE_URL                     # Neon Postgres connection string (required)
+#   - LOOPS_API_KEY                    # Loops transactional API key (optional)
+#   - LOOPS_NEW_REC_TEMPLATE_ID        # Loops template id for new-rec email
+#   - LOOPS_REVEAL_READY_TEMPLATE_ID   # Loops template id for reveal-ready email
+#   - USER_A_EMAIL                     # two-user prototype routing
+#   - USER_B_EMAIL                     # two-user prototype routing
+#   - PUBLIC_APP_URL                   # absolute URL used inside email bodies
+
+version: "1.0"
+
+install:
+  - npm install
+
+maintenance:
+  # Fast sanity check that the SPA still compiles on fresh install.
+  # DATABASE_URL is not required for the Astro build itself; leaving it unset is fine.
+  - npm run build
+
+# Common commands (surfaces to agent for quick reuse — purely informational)
+commands:
+  dev: npm run dev            # local dev server @ localhost:4321
+  build: npm run build        # production build (Vercel SSR adapter)
+  preview: npm run preview    # serve the production build locally
+  check: npm run check        # astro check (TS + .astro type check)
+  db:setup: npm run db:setup  # idempotent Neon schema migration
