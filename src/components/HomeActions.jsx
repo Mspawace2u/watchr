@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const HomeActions = () => {
   return (
-    <div className="flex flex-col gap-4 max-w-[260px] mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000">
+    <div className="flex flex-col gap-4 w-full max-w-[260px] mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000">
       <motion.a
         href="/drop-a-rec"
         className="btn-pill w-full max-w-[260px]"
