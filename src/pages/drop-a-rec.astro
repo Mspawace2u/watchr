@@ -8,11 +8,14 @@ import { ChevronLeft } from 'lucide-react';
     <div class="flex flex-col gap-12">
         <header class="flex flex-col gap-6">
             <a href="/" class="group flex items-center gap-2 text-brand-muted hover:text-totes-turquoise transition-colors w-fit">
-                <ChevronLeft size={16} className="transition-transform group-hover:-translate-x-1" />
-                <span class="text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase">Back</span>
+                <ChevronLeft size={16} strokeWidth={1.5} className="transition-transform group-hover:-translate-x-1" />
+                <span class="text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase">Home</span>
             </a>
             <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
-                Drop <span class="text-totes-turquoise">a Rec</span>
+                Drop <span
+                    class="bg-clip-text text-transparent"
+                    style="background-image: linear-gradient(to right, var(--color-totes-turquoise), var(--color-electric-purple), var(--color-punk-rock-pink), var(--color-highlighter-yellow));"
+                >Your Rec</span>
             </h1>
         </header>
 
