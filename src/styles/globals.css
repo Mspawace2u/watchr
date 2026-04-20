@@ -34,7 +34,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-urbanist);
-    @apply uppercase tracking-wider font-semibold;
+    @apply tracking-wider font-semibold;
   }
 }
 
