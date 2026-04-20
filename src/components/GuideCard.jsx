@@ -24,8 +24,8 @@ const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
       <div className="flex justify-between items-start gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-[10px] font-urbanist font-bold text-totes-turquoise tracking-widest uppercase">
-            {getTypeIcon(recommendation.type)}
-            {recommendation.type.replace('_', ' ')}
+            {getTypeIcon(recommendation.content_type)}
+            {recommendation.content_type?.replace('_', ' ')}
             <span className="text-brand-muted/40 px-1">•</span>
             <span className="text-brand-muted">{recommendation.streamer}</span>
           </div>
@@ -40,10 +40,10 @@ const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
 
       <div className="space-y-2">
         <span className="inline-block px-2 py-0.5 rounded bg-brand-muted/10 text-[9px] font-urbanist font-bold text-brand-muted uppercase tracking-wider">
-          {recommendation.genre}
+          {recommendation.genre_or_topic}
         </span>
         <p className="text-brand-muted text-sm leading-relaxed font-light line-clamp-3">
-          {recommendation.blurb}
+          {recommendation.short_blurb}
         </p>
       </div>
 
