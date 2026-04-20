@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MessageSquareQuote } from 'lucide-react';
+import { MessageSquareQuote } from 'lucide-react';
 import { TACO_RATING_SCALE } from '../lib/constants';
 
 const RevealFlow = ({ recommendation, rating, hotTake, onComplete }) => {

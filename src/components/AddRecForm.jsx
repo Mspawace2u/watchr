@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Tv, Monitor, Film, FileText, MapPin, AlignLeft } from 'lucide-react';
+import { Plus, Tv, Monitor, Film, FileText, AlignLeft } from 'lucide-react';
 import { CONTENT_TYPES } from '../lib/constants';
 
 const AddRecForm = () => {
