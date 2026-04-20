@@ -5,13 +5,19 @@ import HomeActions from "../components/HomeActions";
 
 <BaseLayout title="Home">
 	<div
-		class="h-full flex flex-col items-start justify-center pt-16 md:pt-24 min-h-[50svh]"
+		class="h-full flex flex-col items-start justify-center pt-16 md:pt-24 gap-8 min-h-[50svh]"
 	>
-		<h1
-			class="text-4xl md:text-5xl mb-4 tracking-tighter text-linear-to-r from-brand-text to-brand-muted bg-clip-text text-transparent"
-		>
-			Watchr
-		</h1>
+		<div class="flex flex-col gap-4 self-stretch">
+			<h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+				Add Your <span
+					class="bg-clip-text text-transparent"
+					style="background-image: linear-gradient(to right, var(--color-totes-turquoise), var(--color-electric-purple), var(--color-punk-rock-pink), var(--color-highlighter-yellow));"
+				>TV Faves</span>
+			</h1>
+			<p class="text-base md:text-lg font-light text-brand-text/80 leading-relaxed">
+				A fun way to share, track, and rate streaming goodies with your favorite human.
+			</p>
+		</div>
 
 		<HomeActions client:load />
 	</div>
