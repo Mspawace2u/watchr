@@ -50,7 +50,7 @@ const AddRecForm = () => {
 
   const labelBase =
     "text-[10px] font-urbanist font-bold tracking-[0.2em] text-electric-purple/70 uppercase flex items-center gap-2";
-  const iconClass = "text-punk-rock-pink";
+  const iconClass = "text-brand-text";
   const fieldBase =
     "w-full bg-brand-bg border border-brand-muted/20 rounded-xl px-4 py-3 focus:outline-none focus:border-punk-rock-pink transition-all font-light";
 
@@ -148,7 +148,7 @@ const AddRecForm = () => {
           value={formData.blurb}
           onChange={handleChange}
           rows={3}
-          placeholder="Why are we watching this?"
+          placeholder="Keep it short, sweet, and spoiler-free."
           className="w-full bg-brand-bg border border-brand-muted/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-punk-rock-pink transition-all font-light resize-none leading-relaxed"
         />
       </div>
