@@ -17,8 +17,6 @@
 }
 
 @layer base {
-  @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;700&family=Kumbh+Sans:wght@300;400;600;700&display=swap');
-
   html, body {
     background-color: var(--color-brand-bg);
     color: var(--color-brand-text);
