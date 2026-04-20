@@ -41,7 +41,7 @@
 @layer components {
   /* Pill Buttons as per vibe-coder-prep.md */
   .btn-pill {
-    @apply relative inline-flex items-center justify-center px-8 py-3 rounded-full 
+    @apply relative inline-flex items-center justify-center px-5 py-3 rounded-full 
            font-urbanist font-bold uppercase tracking-widest text-sm transition-all duration-300
            bg-brand-bg text-brand-text cursor-pointer;
   }
