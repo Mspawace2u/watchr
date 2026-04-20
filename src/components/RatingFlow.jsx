@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TacoScale from './TacoScale';
 import HotTakePrompt from './HotTakePrompt';
-import { Heart } from 'lucide-react';
+import { Heart, Lock } from 'lucide-react';
 
 const RatingFlow = ({ recId }) => {
-  const [step, setStep] = useState('taco'); // 'taco' | 'more-like-this' | 'hot-take' | 'complete'
+  const [step, setStep] = useState('taco'); // 'taco' | 'more-like-this' | 'hot-take' | 'complete' | 'locked'
   const [ratingData, setRatingData] = useState({
     rating: 0,
     moreLikeThis: false,
     hotTake: null
   });
+  const [lockedMessage, setLockedMessage] = useState(null);
 
   const handleRatingSelect = (rating) => {
     setRatingData(prev => ({ ...prev, rating }));
@@ -25,31 +26,42 @@ const RatingFlow = ({ recId }) => {
   const handleHotTakeComplete = async (hotTake) => {
     const userId = localStorage.getItem('watchr_user') || 'A';
     const targetUserId = userId === 'A' ? 'B' : 'A';
-    
+
     try {
       // 1. Save rating and hot take
-      await fetch('/api/reactions', {
+      const res = await fetch('/api/reactions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          action: 'saveRating', 
-          recId, 
-          userId, 
+        body: JSON.stringify({
+          action: 'saveRating',
+          recId,
+          userId,
           rating: ratingData.rating,
           moreLikeThis: ratingData.moreLikeThis,
-          hotTake 
+          hotTake
         })
       });
+
+      if (res.status === 409) {
+        const body = await res.json().catch(() => ({}));
+        setLockedMessage(body.message || 'Your hot take is locked.');
+        setStep('locked');
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(`Save failed with status ${res.status}`);
+      }
 
       // 2. Create notification for the other user
       await fetch('/api/notifications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          action: 'create', 
-          recId, 
-          targetUserId, 
-          type: 'reveal_ready' 
+        body: JSON.stringify({
+          action: 'create',
+          recId,
+          targetUserId,
+          type: 'reveal_ready'
         })
       });
 
@@ -123,6 +135,23 @@ const RatingFlow = ({ recId }) => {
             <h2 className="text-3xl font-bold tracking-tight">Reveal Ready!</h2>
             <p className="text-brand-muted max-w-xs font-light">Your rating and hot take have been locked. The other user has been notified.</p>
             <a href="/guide" class="btn-pill mt-8">SWEET, ALL DONE HERE</a>
+          </motion.div>
+        )}
+
+        {step === 'locked' && (
+          <motion.div
+            key="locked"
+            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center justify-center py-20 text-center gap-6"
+          >
+            <div className="w-20 h-20 bg-punk-rock-pink/15 rounded-full flex items-center justify-center text-punk-rock-pink shadow-[0_0_40px_rgba(255,47,146,0.2)]">
+                <Lock size={36} />
+            </div>
+            <h2 className="text-3xl font-bold tracking-tight">Rating Locked</h2>
+            <p className="text-brand-muted max-w-xs font-light">
+              {lockedMessage || 'The other user has already viewed this reveal — hot takes lock at that point so the memory stays pure.'}
+            </p>
+            <a href="/guide" class="btn-pill mt-8">BACK TO GUIDE</a>
           </motion.div>
         )}
       </AnimatePresence>

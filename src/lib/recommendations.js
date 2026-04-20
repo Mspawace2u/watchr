@@ -1,12 +1,19 @@
-import { sql } from './neon';
+import { sql, safeInsert } from './neon';
 
 export async function createRecommendation(data) {
   const { userId, title, streamer, type, genre, blurb } = data;
-  return await sql`
-    INSERT INTO recommendations (created_by_user_id, title, streamer, content_type, genre_or_topic, short_blurb)
-    VALUES (${userId}, ${title}, ${streamer}, ${type}, ${genre}, ${blurb})
-    RETURNING *
-  `;
+  const result = await safeInsert({
+    table: 'recommendations',
+    columns: {
+      created_by_user_id: userId,
+      title,
+      streamer,
+      content_type: type,
+      genre_or_topic: genre,
+      short_blurb: blurb,
+    },
+  });
+  return result;
 }
 
 export async function getRecommendations() {
