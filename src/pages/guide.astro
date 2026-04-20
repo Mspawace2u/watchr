@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GuideGrid from '../components/GuideGrid';
 import NotificationIndicator from '../components/NotificationIndicator';
-import { ChevronLeft, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 ---
 
 <BaseLayout title="Shared Guide">
@@ -10,15 +10,15 @@ import { ChevronLeft, Plus } from 'lucide-react';
         <header class="flex flex-col gap-6">
             <div class="flex justify-between items-start">
                 <a href="/" class="group flex items-center gap-2 text-brand-muted hover:text-totes-turquoise transition-colors w-fit pt-2">
-                    <ChevronLeft size={16} className="transition-transform group-hover:-translate-x-1" />
+                    <ChevronLeft size={16} strokeWidth={1.5} className="transition-transform group-hover:-translate-x-1" />
                     <span class="text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase">Home</span>
                 </a>
-                
-                <div class="flex flex-col items-end gap-4">
+
+                <div class="flex flex-col items-end gap-4 pt-2">
                     <NotificationIndicator client:load />
-                    <a href="/drop-a-rec" class="flex items-center gap-2 bg-totes-turquoise/10 hover:bg-totes-turquoise/20 text-totes-turquoise px-4 py-2 rounded-full border border-totes-turquoise/30 transition-all text-[10px] font-urbanist font-bold tracking-widest uppercase">
-                        <Plus size={14} />
-                        Drop a Rec
+                    <a href="/drop-a-rec" class="group flex items-center gap-1 text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase">
+                        <span>Drop a Rec</span>
+                        <ChevronRight size={16} strokeWidth={1.5} className="transition-transform group-hover:translate-x-1" />
                     </a>
                 </div>
             </div>
