@@ -15,7 +15,7 @@ const HomeActions = () => {
         <span>DROP A REC</span>
         <Mic
           size={16}
-          strokeWidth={2}
+          strokeWidth={1.5}
           aria-hidden="true"
           className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
         />
@@ -31,7 +31,7 @@ const HomeActions = () => {
         <span>VIEW GUIDE</span>
         <Tv
           size={16}
-          strokeWidth={2}
+          strokeWidth={1.5}
           aria-hidden="true"
           className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
         />
