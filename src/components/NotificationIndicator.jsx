@@ -5,26 +5,37 @@ import { Bell } from 'lucide-react';
 const NotificationIndicator = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    setUserId(localStorage.getItem('watchr_user') || 'A');
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    let cancelled = false;
+
     const fetchNotifications = async () => {
-      const activeUser = localStorage.getItem('watchr_user') || 'A';
       try {
-        const res = await fetch(`/api/notifications?userId=${activeUser}`);
+        const res = await fetch(`/api/notifications?userId=${userId}`);
         const data = await res.json();
-        setNotifications(data);
+        if (!cancelled) setNotifications(data);
       } catch (error) {
         console.error('Failed to fetch notifications:', error);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     fetchNotifications();
-    
+
     // Refresh periodically for prototype
     const interval = setInterval(fetchNotifications, 10000);
-    return () => clearInterval(interval);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, [userId]);
 
   if (loading || notifications.length === 0) return null;
