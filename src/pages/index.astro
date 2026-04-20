@@ -4,10 +4,8 @@ import HomeActions from "../components/HomeActions";
 ---
 
 <BaseLayout title="Home">
-	<div
-		class="h-full flex flex-col items-start justify-center pt-16 md:pt-24 gap-8 min-h-[50svh]"
-	>
-		<div class="flex flex-col gap-4 self-stretch">
+	<div class="flex flex-col gap-12">
+		<header class="flex flex-col gap-4">
 			<h1 class="text-4xl md:text-5xl font-bold tracking-tight">
 				Add Your <span
 					class="bg-clip-text text-transparent"
@@ -17,7 +15,7 @@ import HomeActions from "../components/HomeActions";
 			<p class="text-base md:text-lg font-light text-brand-text/80 leading-relaxed">
 				A fun way to share, track, and rate streaming goodies with your favorite human.
 			</p>
-		</div>
+		</header>
 
 		<HomeActions client:load />
 	</div>
