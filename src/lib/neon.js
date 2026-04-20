@@ -32,6 +32,12 @@ function extractMissingColumn(err) {
  * @param {Record<string, unknown>} opts.columns — column → value
  * @param {boolean} [opts.touchUpdatedAt=true] — include `updated_at = NOW()` on upsert
  * @param {boolean} [opts.returning=true] — append `RETURNING *`
+ * @param {string} [opts.updateWhere] — optional SQL fragment appended to the
+ *   ON CONFLICT DO UPDATE as `WHERE <updateWhere>`. Lets callers make the
+ *   update atomic (e.g. `reactions.reveal_viewed_by_other_user IS NOT TRUE`
+ *   for a lock guard). Column names referenced here are NOT auto-dropped by
+ *   the 42703 retry — if the referenced column is missing, the upsert throws.
+ *   Trusted SQL only — never interpolate user input.
  */
 export async function safeUpsert({
   table,
@@ -39,6 +45,7 @@ export async function safeUpsert({
   columns,
   touchUpdatedAt = true,
   returning = true,
+  updateWhere = null,
 }) {
   const working = { ...columns };
   const maxAttempts = Object.keys(working).length + 1;
@@ -56,11 +63,12 @@ export async function safeUpsert({
 
     const insertCols = touchUpdatedAt ? `${cols.join(', ')}, updated_at` : cols.join(', ');
     const insertVals = touchUpdatedAt ? `${placeholders}, NOW()` : placeholders;
+    const whereClause = updateWhere ? `\n      WHERE ${updateWhere}` : '';
     const query = `
       INSERT INTO ${table} (${insertCols})
       VALUES (${insertVals})
       ON CONFLICT (${conflictKeys.join(', ')})
-      DO UPDATE SET ${updateAssignments.join(', ')}
+      DO UPDATE SET ${updateAssignments.join(', ')}${whereClause}
       ${returning ? 'RETURNING *' : ''}
     `;
 

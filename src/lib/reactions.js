@@ -31,6 +31,12 @@ async function getReaction(recId, userId) {
 /**
  * Save a rating + hot take. Locked once the other user has viewed the reveal:
  * returns `{ locked: true, reaction }` without writing.
+ *
+ * Lock enforcement is atomic: the upsert's DO UPDATE only runs when
+ * `reveal_viewed_by_other_user IS NOT TRUE`, so a concurrent `setRevealViewed`
+ * between the pre-read and the write cannot be bypassed. Pre-read is kept as a
+ * fast-path so the common "already locked" case skips the write round-trip.
+ *
  * Uses schema-drift-tolerant upsert so an optional column (e.g. hot_take_raw)
  * going missing does not fail the whole save.
  */
@@ -51,8 +57,17 @@ export async function saveRating(recId, userId, rating, moreLikeThis, hotTake) {
       hot_take_raw: hotTake,
       reveal_ready: true,
     },
+    updateWhere: 'reactions.reveal_viewed_by_other_user IS NOT TRUE',
   });
-  return { locked: false, reaction: Array.isArray(result) ? result[0] : result };
+
+  const rows = Array.isArray(result) ? result : result ? [result] : [];
+  if (rows.length === 0) {
+    // Upsert matched an existing row, but the WHERE guard blocked the update —
+    // the other user viewed the reveal between our pre-read and the write.
+    const locked = await getReaction(recId, userId);
+    return { locked: true, reaction: locked ?? existing };
+  }
+  return { locked: false, reaction: rows[0] };
 }
 
 export async function setRevealViewed(recId, viewerUserId) {
