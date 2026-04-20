@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import RatingFlow from '../components/RatingFlow';
-import RevealFlow from '../components/RevealFlow';
+import RevealGate from '../components/RevealGate';
 import { ChevronLeft } from 'lucide-react';
 import { getRecommendationById } from '../lib/recommendations';
 import { getReactionsByRecommendation } from '../lib/reactions';
@@ -10,17 +10,12 @@ const { searchParams } = Astro.url;
 const id = searchParams.get('id');
 const view = searchParams.get('view');
 
-let recommendation = null;
-let friendReaction = null;
+let recommendation: Awaited<ReturnType<typeof getRecommendationById>> | null = null;
+let reactions: Record<string, unknown>[] = [];
 
 if (id) {
     recommendation = await getRecommendationById(id);
-    const reactions = await getReactionsByRecommendation(id);
-    // Find the reaction from the OTHER user if we are viewing a reveal
-    if (view) {
-        // In prototype, we switch 'A'/'B' based on toggle, but here we just need any other user's reveal
-        friendReaction = reactions.find(r => r.reveal_ready === true);
-    }
+    reactions = await getReactionsByRecommendation(id);
 }
 ---
 
@@ -36,14 +31,8 @@ if (id) {
             </h1>
         </header>
 
-        {(view && recommendation && friendReaction) ? (
-            <RevealFlow 
-                client:load 
-                recommendation={recommendation} 
-                rating={friendReaction.taco_rating} 
-                hotTake={friendReaction.hot_take_raw}
-                onComplete={() => window.location.href = `/reveal?id=${id}`}
-            />
+        {(view && recommendation) ? (
+            <RevealGate client:load recommendation={recommendation} reactions={reactions} />
         ) : (
             <RatingFlow client:load recId={id} />
         )}
