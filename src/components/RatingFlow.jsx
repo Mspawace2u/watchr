@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TacoScale from './TacoScale';
 import HotTakePrompt from './HotTakePrompt';
@@ -10,15 +10,20 @@ const GRADIENT_STYLE = {
     'linear-gradient(to right, var(--color-totes-turquoise), var(--color-electric-purple), var(--color-punk-rock-pink), var(--color-highlighter-yellow))',
 };
 
-const RatingFlow = ({ recId }) => {
-  // Steps mirror the four "pages" of the reveal flow so RevealHeader can
-  // swap the right-nav label (HOME vs SKIP IT) with the sub-step.
+const RatingFlow = ({ recId, createdByUserId = null }) => {
+  // Steps mirror the pages of the reveal flow so RevealHeader can swap the
+  // right-nav label (HOME vs SKIP IT) with the sub-step.
   // 'taco'              = Page 1 — taco rating
-  // 'more-like-this'    = Page 2 — more-like-this question
-  // 'hot-take-prompt'   = Page 3 — "Drop your 2-sentence hot take?" Yep / Naw
+  // 'more-like-this'    = Page 2 — more-like-this question (reviewer only)
+  // 'hot-take-prompt'   = Page 3 — "Drop your 2-sentence hot take?" Yep / Nope
   // 'hot-take-input'    = Page 4 — textarea + mic capture
   // 'complete'          = all-done confirmation
   // 'locked'            = reveal already viewed; no further input
+  //
+  // "more-like-this" is *only* useful feedback the reviewer can give back to
+  // the recommender. When the recommender themselves comes through to rate
+  // their own rec after reading the viewer's hot take, we skip straight from
+  // taco -> hot-take-prompt.
   const [step, setStep] = useState('taco');
   const [ratingData, setRatingData] = useState({
     rating: 0,
@@ -26,10 +31,19 @@ const RatingFlow = ({ recId }) => {
     hotTake: null,
   });
   const [lockedMessage, setLockedMessage] = useState(null);
+  const [isRecommender, setIsRecommender] = useState(false);
+
+  useEffect(() => {
+    if (!createdByUserId) return;
+    const viewer = localStorage.getItem('watchr_user') || 'A';
+    setIsRecommender(viewer === createdByUserId);
+  }, [createdByUserId]);
 
   const handleRatingSelect = (rating) => {
     setRatingData((prev) => ({ ...prev, rating }));
-    setStep('more-like-this');
+    // Recommender skips the more-like-this question — not a useful data
+    // point to feed back to themselves.
+    setStep(isRecommender ? 'hot-take-prompt' : 'more-like-this');
   };
 
   const handleMoreLikeThis = (val) => {

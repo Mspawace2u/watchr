@@ -39,33 +39,41 @@
 }
 
 @layer components {
-  /* Pill Buttons — 4-bright gradient hairline, low opacity at rest,
-     100% opacity + subtle turquoise diffusion glow on hover.
+  /* Pill Buttons — 4-bright gradient hairline at 40% opacity at rest,
+     100% opacity + turquoise diffusion glow on hover.
+
+     Rendered via the canonical padding-box/border-box double-background
+     trick. This keeps the gradient outline fully visible at every corner
+     regardless of transform/flex context (the earlier `::before` + `-z-10`
+     approach clipped the bottom and one side of the YEP/NOPE pills at Page 3).
      Canonical ref: vibe-coder-prep-rules.md §6.4.3 + watchr session 2026-04-20. */
   .btn-pill {
     @apply relative inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full
            font-urbanist font-bold uppercase tracking-widest text-sm transition-all duration-300
-           bg-brand-bg text-brand-text cursor-pointer;
-  }
-
-  .btn-pill::before {
-    content: "";
-    background-image: linear-gradient(
-      to right,
-      var(--color-totes-turquoise),
-      var(--color-electric-purple),
-      var(--color-punk-rock-pink),
-      var(--color-highlighter-yellow)
-    );
-    @apply absolute -inset-[1px] -z-10 rounded-full opacity-40 transition-opacity duration-300;
+           text-brand-text cursor-pointer;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--color-brand-bg), var(--color-brand-bg)) padding-box,
+      linear-gradient(
+        to right,
+        rgba(45, 226, 230, 0.4),
+        rgba(155, 92, 255, 0.4),
+        rgba(255, 47, 146, 0.4),
+        rgba(255, 228, 77, 0.4)
+      ) border-box;
   }
 
   .btn-pill:hover {
-    @apply bg-totes-turquoise text-brand-bg scale-105;
+    @apply text-brand-bg scale-105;
+    background:
+      linear-gradient(var(--color-totes-turquoise), var(--color-totes-turquoise)) padding-box,
+      linear-gradient(
+        to right,
+        var(--color-totes-turquoise),
+        var(--color-electric-purple),
+        var(--color-punk-rock-pink),
+        var(--color-highlighter-yellow)
+      ) border-box;
     box-shadow: 0 0 24px rgba(45, 226, 230, 0.4);
-  }
-
-  .btn-pill:hover::before {
-    @apply opacity-100;
   }
 }
