@@ -1,18 +1,20 @@
-import { updateReactionStatus, saveRating, setRevealViewed, getReactionsByRecommendation, getAllReactions } from '../../lib/reactions';
+import { updateReactionStatus, saveRating, setRevealViewed, getReactionsByRecommendation, getAllReactionStatuses } from '../../lib/reactions';
 import { getRecommendationById } from '../../lib/recommendations';
 import { notifyRevealReady } from '../../lib/loops';
 
 export const GET = async ({ url }) => {
   try {
     const recId = url.searchParams.get('recId');
-    // Guide page calls this with no recId — return every reaction row so the
-    // client can map each card to its viewer's status. Without this, the
-    // WHERE clause was `= NULL`, always empty, and uniform-yellow active
-    // state never rendered because `userStatus` fell through to the
-    // 'in_my_queue' default after every click.
+    // Guide page calls this with no recId — return only status columns for
+    // every reaction so the client can map each card to its viewer's status.
+    // Without this fallback, the WHERE clause resolved to `= NULL`, the array
+    // was always empty, and the uniform-yellow active state never rendered
+    // because userStatus fell back to the 'in_my_queue' default after every
+    // click. The no-recId branch deliberately excludes hot_take_raw /
+    // taco_rating / more_like_this so the reveal-gating guarantee holds.
     const data = recId
       ? await getReactionsByRecommendation(recId)
-      : await getAllReactions();
+      : await getAllReactionStatuses();
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
