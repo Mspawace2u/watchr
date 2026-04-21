@@ -125,12 +125,12 @@ const GuideGrid = () => {
   return (
     <div className="flex flex-col gap-12">
       {/* Typography hierarchy inverted per session spec: section headlines are
-          larger than card titles + 100% highlighter-yellow, which makes it
-          obvious where to *view what to watch* vs. where to *review what you
-          told others to watch*. */}
+          larger than card titles. Headlines stay brand-white 100% now that the
+          size delta alone carries the hierarchy, plus a trailing emoji that
+          matches the section's notification email for glanceable wayfinding. */}
       <section className="flex flex-col gap-6">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-highlighter-yellow">
-          Watchr Recs for You
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-brand-text">
+          Watchr Recs for You <span aria-hidden="true">🎬</span>
         </h2>
         <div className="grid grid-cols-1 gap-8">
           {recsForYou.length === 0
@@ -140,8 +140,8 @@ const GuideGrid = () => {
       </section>
 
       <section className="flex flex-col gap-6">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-highlighter-yellow">
-          Your Recs to Others
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-brand-text">
+          Your Recs to Others <span aria-hidden="true">👀</span>
         </h2>
         <div className="grid grid-cols-1 gap-8">
           {recsFromYou.length === 0
