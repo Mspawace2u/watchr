@@ -14,6 +14,7 @@ import RevealFlow from './RevealFlow';
 const RevealGate = ({ recommendation, reactions }) => {
   const list = reactions || [];
   const [friendReaction, setFriendReaction] = useState(null);
+  const [viewerHasRated, setViewerHasRated] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -21,7 +22,11 @@ const RevealGate = ({ recommendation, reactions }) => {
     const found = list.find(
       (r) => r.reveal_ready === true && r.user_id !== viewer
     );
+    const ownRating = list.find(
+      (r) => r.user_id === viewer && r.taco_rating != null
+    );
     setFriendReaction(found ?? null);
+    setViewerHasRated(Boolean(ownRating));
     setReady(true);
   }, [list]);
 
@@ -46,6 +51,7 @@ const RevealGate = ({ recommendation, reactions }) => {
       rating={friendReaction.taco_rating}
       hotTake={friendReaction.hot_take_raw}
       moreLikeThis={friendReaction.more_like_this === true}
+      viewerHasRated={viewerHasRated}
       onComplete={() => {
         window.location.href = `/reveal?id=${recommendation.id}`;
       }}

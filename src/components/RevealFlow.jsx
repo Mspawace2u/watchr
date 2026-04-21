@@ -19,7 +19,14 @@ import { TACO_RATING_SCALE } from '../lib/constants';
 // CTA pill mirrors Got It and New Reveal Ready dimensions. The secondary
 // BACK TO GUIDE link uses the same LayoutGrid icon as the sticky header
 // guide nav so the redirect target is visually consistent.
-const RevealFlow = ({ recommendation, rating, hotTake, moreLikeThis, onComplete }) => {
+const RevealFlow = ({
+  recommendation,
+  rating,
+  hotTake,
+  moreLikeThis,
+  onComplete,
+  viewerHasRated = false,
+}) => {
   const [revealed, setRevealed] = useState(false);
 
   const ratingObj = TACO_RATING_SCALE.find(item => item.value === rating);
@@ -85,8 +92,8 @@ const RevealFlow = ({ recommendation, rating, hotTake, moreLikeThis, onComplete 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="space-y-6 pb-6">
-            <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
+          <div className="pb-6">
+            <label className="block mb-6 text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
               The Verdict
             </label>
             <div className="bg-totes-turquoise/5 border border-totes-turquoise/20 rounded-3xl p-8 flex flex-col items-center gap-4 text-center">
@@ -107,8 +114,8 @@ const RevealFlow = ({ recommendation, rating, hotTake, moreLikeThis, onComplete 
           </div>
 
           {hotTake && (
-            <div className="space-y-6">
-              <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
+            <div>
+              <label className="block mb-6 text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
                 Hot Take
               </label>
               <div className="relative bg-brand-bg border border-brand-muted/10 rounded-3xl p-8 pl-16">
@@ -130,8 +137,8 @@ const RevealFlow = ({ recommendation, rating, hotTake, moreLikeThis, onComplete 
           )}
 
           {moreLikeThis && (
-            <div className="space-y-6">
-              <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
+            <div>
+              <label className="block mb-6 text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
                 More Like This
               </label>
               <p className="text-brand-text/90 text-sm leading-relaxed font-light">
@@ -140,27 +147,29 @@ const RevealFlow = ({ recommendation, rating, hotTake, moreLikeThis, onComplete 
             </div>
           )}
 
-          <div className="pt-8 flex flex-col items-center gap-4">
-            <button
-              type="button"
-              onClick={onComplete}
-              className="btn-pill"
-            >
-              Add My Rating
-            </button>
-            <a
-              href="/guide"
-              className="group flex items-center gap-2 text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase"
-            >
-              <span className="transition-transform group-hover:-translate-x-0.5">Back to Guide</span>
-              <LayoutGrid
-                size={14}
-                strokeWidth={1.5}
-                className="transition-transform group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </a>
-          </div>
+          {!viewerHasRated && (
+            <div className="pt-8 flex flex-col items-center gap-4">
+              <button
+                type="button"
+                onClick={onComplete}
+                className="btn-pill"
+              >
+                Add My Rating
+              </button>
+              <a
+                href="/guide"
+                className="group flex items-center gap-2 text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase"
+              >
+                <span className="transition-transform group-hover:-translate-x-0.5">Back to Guide</span>
+                <LayoutGrid
+                  size={14}
+                  strokeWidth={1.5}
+                  className="transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </a>
+            </div>
+          )}
         </motion.div>
       )}
     </div>

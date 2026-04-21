@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import TacoScale from './TacoScale';
 import HotTakePrompt from './HotTakePrompt';
 import RevealHeader from './RevealHeader';
-import { Lock } from 'lucide-react';
 
 const GRADIENT_STYLE = {
   backgroundImage:
@@ -193,7 +192,7 @@ const RatingFlow = ({ recId, createdByUserId = null }) => {
             </motion.div>
           )}
 
-          {step === 'complete' && (
+          {step === 'complete' && !isRecommender && (
             <motion.div
               key="complete"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -205,9 +204,27 @@ const RatingFlow = ({ recId, createdByUserId = null }) => {
               </div>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Got It!</h2>
               <p className="text-brand-text/80 max-w-xs font-light">
-                Tacos and hot take locked. They're on the way to your Watchr right now...
+                Tacos and hot take locked. They're on the way to your rec dropper now...
               </p>
-              <a href="/guide" className="btn-pill mt-8">SWEET, ALL DONE HERE</a>
+              <a href="/guide" className="btn-pill mt-8">Sweet, All Done Here</a>
+            </motion.div>
+          )}
+
+          {step === 'complete' && isRecommender && (
+            <motion.div
+              key="complete-locked"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex flex-col items-center justify-center text-center gap-6 pt-4"
+            >
+              <div className="w-24 h-24 rounded-full flex items-center justify-center text-5xl shadow-[0_0_40px_rgba(255,47,146,0.2)] bg-punk-rock-pink/15">
+                <span role="img" aria-label="locked">🔒</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Title Rank Locked!</h2>
+              <p className="text-brand-text/80 max-w-xs font-light">
+                Letting your Watchr pal see to give them a taste of what recs are best to serve you next.
+              </p>
+              <a href="/guide" className="btn-pill mt-8">Sweet, All Done Here</a>
             </motion.div>
           )}
 
@@ -216,16 +233,16 @@ const RatingFlow = ({ recId, createdByUserId = null }) => {
               key="locked"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center justify-center py-20 text-center gap-6"
+              className="flex flex-col items-center justify-center text-center gap-6 pt-4"
             >
-              <div className="w-20 h-20 bg-punk-rock-pink/15 rounded-full flex items-center justify-center text-punk-rock-pink shadow-[0_0_40px_rgba(255,47,146,0.2)]">
-                <Lock size={36} strokeWidth={1.5} />
+              <div className="w-24 h-24 rounded-full flex items-center justify-center text-5xl shadow-[0_0_40px_rgba(255,47,146,0.2)] bg-punk-rock-pink/15">
+                <span role="img" aria-label="locked">🔒</span>
               </div>
-              <h2 className="text-3xl font-bold tracking-tight">Rating Locked</h2>
-              <p className="text-brand-muted max-w-xs font-light">
-                {lockedMessage || 'The other user has already viewed this reveal — hot takes lock at that point so the memory stays pure.'}
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Title Rank Locked!</h2>
+              <p className="text-brand-text/80 max-w-xs font-light">
+                {lockedMessage || 'Letting your Watchr pal see to give them a taste of what recs are best to serve you next.'}
               </p>
-              <a href="/guide" className="btn-pill mt-8">BACK TO GUIDE</a>
+              <a href="/guide" className="btn-pill mt-8">Back to Guide</a>
             </motion.div>
           )}
         </AnimatePresence>
