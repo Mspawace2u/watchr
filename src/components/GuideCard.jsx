@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import StatusSelector from './StatusSelector';
 import RecEditModal from './RecEditModal';
+import ConfirmDialog from './ConfirmDialog';
 
 // `variant` toggles the card between the two /guide sections:
 // - 'received' (Watchr Recs for You): renders the YOUR STATUS selector so
@@ -40,6 +41,8 @@ const GuideCard = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
   const dateSent = formatDateSent(recommendation.created_at);
 
@@ -48,10 +51,8 @@ const GuideCard = ({
   // enforces the same gate — this is just UX.
   const canManage = variant === 'sent' && recipientStatus === 'in_my_queue';
 
-  const handleDelete = async () => {
-    if (!window.confirm(`Delete "${recommendation.title}"? This can't be undone.`)) {
-      return;
-    }
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
     setDeleteError(null);
     try {
       const res = await fetch(
@@ -61,11 +62,16 @@ const GuideCard = ({
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setDeleteError(data?.error ?? 'Could not delete rec.');
+        setIsDeleting(false);
+        setIsConfirmingDelete(false);
         return;
       }
+      setIsConfirmingDelete(false);
       onChanged?.();
     } catch (err) {
       setDeleteError(err.message);
+      setIsDeleting(false);
+      setIsConfirmingDelete(false);
     }
   };
 
@@ -112,7 +118,7 @@ const GuideCard = ({
               </button>
               <button
                 type="button"
-                onClick={handleDelete}
+                onClick={() => setIsConfirmingDelete(true)}
                 aria-label="Delete this rec"
                 className="w-8 h-8 rounded-full flex items-center justify-center text-brand-text hover:text-punk-rock-pink transition-colors"
               >
@@ -149,6 +155,21 @@ const GuideCard = ({
             userId={currentUserId}
             onClose={() => setIsEditing(false)}
             onSaved={() => onChanged?.()}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isConfirmingDelete && (
+          <ConfirmDialog
+            title={`Delete "${recommendation.title}"?`}
+            message="This can't be undone. Your pal won't see this rec in their Guide anymore."
+            confirmLabel="Delete Rec"
+            cancelLabel="Cancel"
+            confirmTone="danger"
+            busy={isDeleting}
+            onConfirm={handleConfirmDelete}
+            onCancel={() => setIsConfirmingDelete(false)}
           />
         )}
       </AnimatePresence>
