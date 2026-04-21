@@ -91,9 +91,14 @@ const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
     try {
       recognition.start();
       setIsRecording(true);
-    } catch {
-      // `start()` throws if already running; just ignore and keep UI in sync.
-      setIsRecording(true);
+    } catch (err) {
+      if (err && err.name === 'InvalidStateError') {
+        // `start()` throws InvalidStateError if a session is already running —
+        // keep UI in sync and let the existing session continue.
+        setIsRecording(true);
+      } else {
+        setMicError("Couldn't start recording. Try again or type it in.");
+      }
     }
   };
 
