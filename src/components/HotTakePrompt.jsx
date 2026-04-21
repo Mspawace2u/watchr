@@ -113,36 +113,36 @@ const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
             exit={{ opacity: 0, scale: 0.9 }}
             className="flex flex-col gap-10"
           >
-            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-brand-text">
+            <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-brand-text">
               Drop your 2-sentence hot take?
             </h3>
 
-            <div className="flex flex-col gap-4 w-full max-w-[260px]">
+            <div className="flex gap-6 w-full">
               <button
                 type="button"
                 onClick={() => onChoice(true)}
-                className="btn-pill w-full group"
+                className="btn-pill flex-1 group"
               >
                 <span>YEP</span>
                 <ThumbsUp
                   size={16}
                   strokeWidth={1.5}
                   aria-hidden="true"
-                  className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                  className="shrink-0 opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
                 />
               </button>
 
               <button
                 type="button"
                 onClick={() => onChoice(false)}
-                className="btn-pill w-full group"
+                className="btn-pill flex-1 group"
               >
                 <span>NAW, I'M GOOD</span>
                 <ThumbsDown
                   size={16}
                   strokeWidth={1.5}
                   aria-hidden="true"
-                  className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                  className="shrink-0 opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
                 />
               </button>
             </div>

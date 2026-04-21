@@ -33,7 +33,7 @@ const RevealGate = ({ recommendation, reactions }) => {
     return (
       <div className="py-20 text-center space-y-2">
         <p className="text-brand-muted">The other user hasn't finished their reveal yet.</p>
-        <a href="/guide" className="inline-block text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase text-brand-muted/70 hover:text-brand-text transition-colors">
+        <a href="/guide" className="inline-block text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase text-brand-muted/70 hover:text-brand-text transition-colors">
           Back to Guide
         </a>
       </div>

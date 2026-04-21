@@ -25,7 +25,7 @@ const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
     >
       <motion.div layout className="flex justify-between items-start gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-[10px] font-urbanist font-bold text-totes-turquoise tracking-widest uppercase">
+          <div className="flex items-center gap-2 text-[10px] font-kumbh font-bold text-totes-turquoise tracking-widest uppercase">
             {getTypeIcon(recommendation.content_type)}
             {recommendation.content_type?.replace('_', ' ')}
             <span className="text-brand-muted/40 px-1">•</span>
@@ -66,7 +66,7 @@ const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
           >
             <div className="pt-6 space-y-6">
               <div className="space-y-3">
-                <span className="block text-[10px] font-urbanist font-bold tracking-[0.2em] text-electric-purple/70 uppercase">
+                <span className="block text-[10px] font-kumbh font-bold tracking-[0.2em] text-electric-purple/70 uppercase">
                   {recommendation.genre_or_topic}
                 </span>
                 <p className="text-brand-text/90 text-sm leading-relaxed font-light">
@@ -75,7 +75,7 @@ const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
               </div>
 
               <div className="pt-4 border-t border-brand-muted/10 space-y-6">
-                <label className="block text-[10px] font-urbanist font-bold tracking-[0.2em] text-electric-purple/70 uppercase">
+                <label className="block text-[10px] font-kumbh font-bold tracking-[0.2em] text-electric-purple/70 uppercase">
                   Your Status
                 </label>
                 <StatusSelector
