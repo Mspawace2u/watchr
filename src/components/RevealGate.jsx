@@ -45,6 +45,7 @@ const RevealGate = ({ recommendation, reactions }) => {
       recommendation={recommendation}
       rating={friendReaction.taco_rating}
       hotTake={friendReaction.hot_take_raw}
+      moreLikeThis={friendReaction.more_like_this === true}
       onComplete={() => {
         window.location.href = `/reveal?id=${recommendation.id}`;
       }}

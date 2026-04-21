@@ -20,14 +20,18 @@ if (id) {
 ---
 
 <BaseLayout title={view ? "Friend's Reveal" : "Your Rating"}>
-    <div class="flex flex-col gap-12">
+    <div class="flex flex-col gap-6">
         {(view && recommendation) ? (
             <>
                 <RevealHeader client:load />
                 <RevealGate client:load recommendation={recommendation} reactions={reactions} />
             </>
         ) : (
-            <RatingFlow client:load recId={id} />
+            <RatingFlow
+                client:load
+                recId={id}
+                createdByUserId={recommendation?.created_by_user_id ?? null}
+            />
         )}
 
         {(!recommendation && id) && (

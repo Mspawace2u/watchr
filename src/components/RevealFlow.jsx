@@ -1,9 +1,25 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquareQuote } from 'lucide-react';
+import { MessageSquareQuote, LayoutGrid } from 'lucide-react';
 import { TACO_RATING_SCALE } from '../lib/constants';
 
-const RevealFlow = ({ recommendation, rating, hotTake, onComplete }) => {
+// Viewer-side post-watch reveal.
+//
+// Screen 1: "New Reveal Ready" — standardized against the "Got It" success
+// card in RatingFlow: same pt-4 / gap-6 spacing, same 5xl headline, same
+// w-24 rounded circle with bg-color/15 + 40px shadow, swapped to
+// Electric Purple.
+//
+// Screen 2: verdict card. THE VERDICT + HOT TAKE + MORE LIKE THIS sections
+// use punk-rock-pink at 70 percent opacity to match the POST-WATCH REVEAL
+// pre-header. Hot take body text pulses between 40 and 100 percent brand
+// white next to a static highlighter-yellow quote icon. MORE LIKE THIS
+// only appears when the reviewer said YES PLEASE.
+//
+// CTA pill mirrors Got It and New Reveal Ready dimensions. The secondary
+// BACK TO GUIDE link uses the same LayoutGrid icon as the sticky header
+// guide nav so the redirect target is visually consistent.
+const RevealFlow = ({ recommendation, rating, hotTake, moreLikeThis, onComplete }) => {
   const [revealed, setRevealed] = useState(false);
 
   const ratingObj = TACO_RATING_SCALE.find(item => item.value === rating);
@@ -11,14 +27,12 @@ const RevealFlow = ({ recommendation, rating, hotTake, onComplete }) => {
   const handleOpenReveal = async () => {
     const userId = localStorage.getItem('watchr_user') || 'A';
     try {
-      // 1. Mark notification as read
       await fetch('/api/notifications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'markRead', recId: recommendation.id, userId })
       });
 
-      // 2. Set reveal as viewed in reactions
       await fetch('/api/reactions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -28,88 +42,124 @@ const RevealFlow = ({ recommendation, rating, hotTake, onComplete }) => {
       setRevealed(true);
     } catch (error) {
       console.error('Failed to update reveal states:', error);
-      setRevealed(true); // Proceed anyway to not block the user
+      setRevealed(true);
     }
   };
 
   return (
-    <div className="w-full max-w-lg space-y-12 py-12">
+    <div className="w-full max-w-lg">
       {!revealed ? (
-         <motion.div 
-          className="flex flex-col items-center justify-center gap-8 py-20 text-center"
+        <motion.div
+          className="flex flex-col items-center justify-center text-center gap-6 pt-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <div className="relative">
-            <motion.div 
-               animate={{ 
-                 scale: [1, 1.1, 1],
-                 rotate: [0, 5, -5, 0]
-               }}
-               transition={{ repeat: Infinity, duration: 4 }}
-               className="w-24 h-24 bg-electric-purple/20 rounded-full flex items-center justify-center text-electric-purple text-3xl shadow-[0_0_50px_rgba(155,92,255,0.2)] cursor-pointer"
-               onClick={handleOpenReveal}
-            >
-              🎁
-            </motion.div>
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight">New Reveal Ready!</h2>
-            <p className="text-brand-muted font-light">The other user shared their thoughts on <span className="text-brand-text font-semibold">{recommendation.title}</span>.</p>
-          </div>
-          <button 
+          <motion.button
+            type="button"
             onClick={handleOpenReveal}
-            className="btn-pill"
+            animate={{
+              scale: [1, 1.05, 1],
+            }}
+            transition={{ repeat: Infinity, duration: 3 }}
+            className="w-24 h-24 rounded-full flex items-center justify-center text-5xl shadow-[0_0_40px_rgba(155,92,255,0.2)] bg-electric-purple/15"
+            aria-label="Open reveal"
           >
-            OPEN REVEAL
+            <span role="img" aria-hidden="true">🎁</span>
+          </motion.button>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">New Reveal Ready!</h2>
+          <p className="text-brand-text/80 max-w-xs font-light">
+            See what your Watchr pal thought of{' '}
+            <span className="text-brand-text font-semibold">{recommendation.title}</span>.
+          </p>
+          <button
+            type="button"
+            onClick={handleOpenReveal}
+            className="btn-pill mt-8"
+          >
+            Open Reveal
           </button>
         </motion.div>
       ) : (
-        <motion.div 
+        <motion.div
           className="space-y-10"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="space-y-4">
-             <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-brand-muted uppercase">The Verdict</label>
-             <div className="bg-totes-turquoise/5 border border-totes-turquoise/20 rounded-3xl p-8 flex flex-col items-center gap-4 text-center">
-                <motion.div 
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', damping: 10 }}
-                  className="text-5xl"
-                >
-                  {'🌮'.repeat(rating)}
-                </motion.div>
-                <div className="space-y-1">
-                  <p className="text-xl font-bold tracking-tight">{ratingObj?.label.split(' ')[0]}</p>
-                  <p className="text-sm text-brand-muted font-light">{ratingObj?.label.split(' ').slice(1).join(' ')}</p>
-                </div>
-             </div>
+          <div className="space-y-4 pb-6">
+            <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
+              The Verdict
+            </label>
+            <div className="bg-totes-turquoise/5 border border-totes-turquoise/20 rounded-3xl p-8 flex flex-col items-center gap-4 text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', damping: 10 }}
+                className="text-5xl"
+              >
+                {'🌮'.repeat(rating)}
+              </motion.div>
+              {ratingObj && (
+                <p className="text-lg font-bold tracking-tight text-brand-text">
+                  {ratingObj.label}
+                </p>
+              )}
+            </div>
           </div>
 
           {hotTake && (
             <div className="space-y-4">
-              <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-brand-muted uppercase">Hot Take</label>
-              <div className="relative bg-brand-bg border border-brand-muted/10 rounded-3xl p-8">
-                <MessageSquareQuote className="absolute top-4 left-4 text-totes-turquoise/20" size={32} />
-                <p className="text-lg md:text-xl font-light italic leading-relaxed text-brand-text/90 relative z-10">
-                  "{hotTake}"
-                </p>
+              <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
+                Hot Take
+              </label>
+              <div className="relative bg-brand-bg border border-brand-muted/10 rounded-3xl p-8 pl-14">
+                <MessageSquareQuote
+                  className="absolute top-6 left-4 text-highlighter-yellow"
+                  size={28}
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                />
+                <motion.p
+                  animate={{ opacity: [0.4, 1, 0.4] }}
+                  transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
+                  className="text-base font-light leading-snug text-brand-text relative z-10"
+                >
+                  {hotTake}
+                </motion.p>
               </div>
             </div>
           )}
 
-          <div className="pt-8 flex flex-col gap-4">
-              <button 
-                onClick={onComplete}
-                className="btn-pill w-full"
-              >
-                COOL, ADD MY RATING
-              </button>
-              <a href="/guide" className="text-center text-[10px] font-kumbh font-bold tracking-[0.2em] text-brand-muted uppercase hover:text-brand-text transition-colors">
-                Back to Guide
-              </a>
+          {moreLikeThis && (
+            <div className="space-y-4">
+              <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
+                More Like This
+              </label>
+              <p className="text-brand-text/90 text-sm leading-relaxed font-light">
+                Hell yes! 💯
+              </p>
+            </div>
+          )}
+
+          <div className="pt-8 flex flex-col items-center gap-4">
+            <button
+              type="button"
+              onClick={onComplete}
+              className="btn-pill"
+            >
+              Add My Rating
+            </button>
+            <a
+              href="/guide"
+              className="group flex items-center gap-2 text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase"
+            >
+              <span className="transition-transform group-hover:-translate-x-0.5">Back to Guide</span>
+              <LayoutGrid
+                size={14}
+                strokeWidth={1.5}
+                className="transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </a>
           </div>
         </motion.div>
       )}
