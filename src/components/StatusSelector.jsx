@@ -17,17 +17,11 @@ const StatusSelector = ({ currentStatus, onStatusChange }) => {
     }
   };
 
-  const getColorClass = (id, isActive) => {
-    if (!isActive) return 'border-brand-muted/20 text-brand-muted hover:border-brand-muted/40';
-
-    switch (id) {
-      case 'in_my_queue': return 'border-highlighter-yellow/50 text-highlighter-yellow bg-highlighter-yellow/10';
-      case 'watching': return 'border-totes-turquoise/50 text-totes-turquoise bg-totes-turquoise/10';
-      case 'done': return 'border-screamer-green/50 text-screamer-green bg-screamer-green/10';
-      case 'no_thanks': return 'border-punk-rock-pink/50 text-punk-rock-pink bg-punk-rock-pink/10';
-      default: return 'border-brand-muted/20 text-brand-muted';
-    }
-  };
+  // Uniform highlighter-yellow active state across all statuses.
+  const getColorClass = (isActive) =>
+    isActive
+      ? 'border-highlighter-yellow/60 text-highlighter-yellow bg-highlighter-yellow/10'
+      : 'border-brand-muted/20 text-brand-muted hover:border-brand-muted/40';
 
   const orderedStatuses = DISPLAY_ORDER
     .map((id) => WATCH_STATUSES.find((s) => s.id === id))
@@ -40,7 +34,7 @@ const StatusSelector = ({ currentStatus, onStatusChange }) => {
           key={status.id}
           onClick={() => onStatusChange(status.id)}
           className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-full border text-[10px] font-urbanist font-bold uppercase tracking-widest transition-all
-            ${getColorClass(status.id, currentStatus === status.id)}
+            ${getColorClass(currentStatus === status.id)}
           `}
         >
           {getIcon(status.id)}
