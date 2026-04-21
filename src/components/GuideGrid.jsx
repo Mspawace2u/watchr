@@ -96,6 +96,13 @@ const GuideGrid = () => {
     const userReaction = reactions.find(
       (r) => r.recommendation_id === rec.id && r.user_id === userId
     );
+    // For 'sent' cards we need the OTHER user's status so GuideCard can gate
+    // the edit/delete icons: edit + delete are only allowed while the
+    // recipient is still IN MY QUEUE (or hasn't reacted yet).
+    const otherReaction = reactions.find(
+      (r) => r.recommendation_id === rec.id && r.user_id !== userId
+    );
+    const recipientStatus = otherReaction?.status ?? 'in_my_queue';
     return (
       <GuideCard
         key={rec.id}
@@ -103,6 +110,9 @@ const GuideGrid = () => {
         userStatus={userReaction?.status || 'in_my_queue'}
         onStatusChange={(status) => handleStatusChange(rec.id, status)}
         variant={variant}
+        recipientStatus={recipientStatus}
+        currentUserId={userId}
+        onChanged={fetchData}
       />
     );
   };
