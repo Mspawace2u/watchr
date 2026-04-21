@@ -4,6 +4,16 @@ export async function getReactionsByRecommendation(recId) {
   return await sql`SELECT * FROM reactions WHERE recommendation_id = ${recId}`;
 }
 
+/**
+ * Returns only the columns the Guide page needs to color each card's status
+ * pill. Intentionally excludes hot_take_raw / taco_rating / more_like_this so
+ * the reveal-gating guarantee (those fields stay hidden until the user clicks
+ * through the reveal flow) can't be bypassed by sniffing the network tab.
+ */
+export async function getAllReactionStatuses() {
+  return await sql`SELECT recommendation_id, user_id, status FROM reactions`;
+}
+
 export async function updateReactionStatus(recId, userId, status) {
   return await safeUpsert({
     table: 'reactions',

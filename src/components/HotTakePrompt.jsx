@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ThumbsUp, ThumbsDown, Mic, Square } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Mic } from 'lucide-react';
 
 /**
  * Pages 3 + 4 of the reveal flow.
@@ -121,28 +121,28 @@ const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
               <button
                 type="button"
                 onClick={() => onChoice(true)}
-                className="btn-pill flex-1 group"
+                className="btn-pill flex-1"
               >
                 <span>YEP</span>
                 <ThumbsUp
                   size={16}
                   strokeWidth={1.5}
                   aria-hidden="true"
-                  className="shrink-0 opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                  className="shrink-0"
                 />
               </button>
 
               <button
                 type="button"
                 onClick={() => onChoice(false)}
-                className="btn-pill flex-1 group"
+                className="btn-pill flex-1"
               >
-                <span>NAW, I'M GOOD</span>
+                <span>NOPE</span>
                 <ThumbsDown
                   size={16}
                   strokeWidth={1.5}
                   aria-hidden="true"
-                  className="shrink-0 opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                  className="shrink-0"
                 />
               </button>
             </div>
@@ -156,34 +156,32 @@ const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
-            <div className="relative">
-              <textarea
-                autoFocus
-                value={hotTake}
-                onChange={(e) => setHotTake(e.target.value)}
-                placeholder="Type your hot take or record a voice note and AI will jot it in."
-                className="w-full bg-brand-bg border border-brand-muted/20 rounded-2xl px-5 py-4 pr-16 focus:outline-none focus:border-totes-turquoise transition-all font-light resize-none leading-relaxed min-h-[140px] placeholder:text-brand-muted/60"
-              />
-
+            <div className="flex justify-end">
               <button
                 type="button"
                 onClick={toggleRecording}
                 aria-label={isRecording ? 'Stop recording' : 'Start voice note'}
                 aria-pressed={isRecording}
-                className={`absolute bottom-3 right-3 w-11 h-11 rounded-full border flex items-center justify-center transition-all
+                className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all
                   ${isRecording
-                    ? 'bg-punk-rock-pink border-punk-rock-pink text-brand-bg shadow-[0_0_0_6px_rgba(255,47,146,0.15)] animate-pulse'
-                    : 'bg-transparent border-punk-rock-pink text-punk-rock-pink hover:shadow-[0_0_15px_rgba(255,47,146,0.35)]'
+                    ? 'bg-totes-turquoise border-totes-turquoise text-transparent shadow-[0_0_0_6px_rgba(45,226,230,0.18)] animate-pulse'
+                    : 'bg-transparent border-totes-turquoise text-totes-turquoise hover:shadow-[0_0_15px_rgba(45,226,230,0.35)]'
                   }`}
               >
-                {isRecording
-                  ? <Square size={16} strokeWidth={2} fill="currentColor" />
-                  : <Mic size={18} strokeWidth={1.5} />}
+                <Mic size={18} strokeWidth={1.5} />
               </button>
             </div>
 
+            <textarea
+              autoFocus
+              value={hotTake}
+              onChange={(e) => setHotTake(e.target.value)}
+              placeholder="Type your hot take or record a voice note and AI will jot it in."
+              className="w-full bg-brand-bg border border-brand-muted/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-totes-turquoise transition-all font-light resize-none leading-relaxed min-h-[140px] placeholder:text-brand-muted/60"
+            />
+
             {isRecording && (
-              <p className="text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase text-punk-rock-pink/80">
+              <p className="text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase text-totes-turquoise/80">
                 Listening…
               </p>
             )}
