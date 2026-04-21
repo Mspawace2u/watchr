@@ -93,14 +93,20 @@ const RatingFlow = ({ recId }) => {
     }
   };
 
-  // Page 4 (hot-take-input) shows SKIP IT so the user can bail without typing.
+  // Page 4 (hot-take-input) shows SKIP IT — it saves the rating with a null
+  // hot take (matching the behavior of the NAW, I'M GOOD button on Page 3)
+  // rather than navigating away and dropping the user's pages 1–2 data.
   const rightNav = step === 'hot-take-input'
-    ? { label: 'Skip It', href: '/' }
+    ? { label: 'Skip It', onClick: () => submitHotTake(null) }
     : { label: 'Home', href: '/' };
 
   return (
     <div className="w-full flex flex-col gap-12">
-      <RevealHeader rightLabel={rightNav.label} rightHref={rightNav.href} />
+      <RevealHeader
+        rightLabel={rightNav.label}
+        rightHref={rightNav.href}
+        onRightClick={rightNav.onClick}
+      />
 
       <div className="w-full max-w-lg">
         <AnimatePresence mode="wait">
