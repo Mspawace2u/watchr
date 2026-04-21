@@ -82,7 +82,8 @@ export async function updateRecommendationGated(id, userId, patch) {
         streamer = ${streamer},
         content_type = ${contentType},
         genre_or_topic = ${genre},
-        short_blurb = ${blurb}
+        short_blurb = ${blurb},
+        updated_at = NOW()
     WHERE id = ${id}
       AND created_by_user_id = ${userId}
       AND NOT EXISTS (
