@@ -25,7 +25,20 @@
 }
 
 @layer base {
-  html, body {
+  /* iOS Save-to-Home sticky-header fix:
+     `overflow-x-hidden` on <html> creates a new scroll container in iOS
+     standalone mode, which silently breaks `position: sticky` on <header>
+     AND strips `backdrop-filter` inheritance (frosted glass goes opaque).
+     Keeping overflow clamp on <body> only preserves horizontal containment
+     without stealing the scroll root from <html>. See watchr session PR D. */
+  html {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-text);
+    font-family: var(--font-kumbh);
+    @apply antialiased;
+  }
+
+  body {
     background-color: var(--color-brand-bg);
     color: var(--color-brand-text);
     font-family: var(--font-kumbh);
