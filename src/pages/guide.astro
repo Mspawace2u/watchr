@@ -14,12 +14,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
                     <span class="text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase">Home</span>
                 </a>
 
-                <div class="flex flex-col items-end gap-4 pt-2">
-                    <NotificationIndicator client:load />
+                <div class="flex flex-col items-end gap-3 pt-2">
                     <a href="/drop-a-rec" class="group flex items-center gap-1 text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase">
                         <span>Drop a Rec</span>
                         <ChevronRight size={16} strokeWidth={1.5} className="transition-transform group-hover:translate-x-1" />
                     </a>
+                    <NotificationIndicator client:load />
                 </div>
             </div>
             <h1 class="text-4xl md:text-5xl font-bold tracking-tight">

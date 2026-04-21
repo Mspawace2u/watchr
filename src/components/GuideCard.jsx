@@ -3,8 +3,30 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Tv, Monitor, Film, FileText, ChevronDown, ChevronUp } from 'lucide-react';
 import StatusSelector from './StatusSelector';
 
-const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
+// `variant` toggles the card between the two /guide sections:
+// - 'received' (Watchr Recs for You): renders the YOUR STATUS selector so
+//   the recipient can flip the rec's progress.
+// - 'sent' (Your Recs to Others): hides the selector and replaces it with a
+//   DATE SENT micro-label so the recommender can't self-rate before the
+//   recipient has weighed in.
+const formatDateSent = (raw) => {
+  if (!raw) return null;
+  const d = new Date(raw);
+  if (Number.isNaN(d.getTime())) return null;
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${mm}.${dd}.${yyyy}`;
+};
+
+const GuideCard = ({
+  recommendation,
+  userStatus,
+  onStatusChange,
+  variant = 'received',
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const dateSent = formatDateSent(recommendation.created_at);
 
   const getTypeIcon = (type) => {
     switch (type) {
@@ -31,7 +53,7 @@ const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
             <span className="text-brand-muted/40 px-1">•</span>
             <span className="text-electric-purple/70">{recommendation.streamer}</span>
           </div>
-          <h3 className="text-2xl md:text-3xl font-bold tracking-tight group-hover:text-totes-turquoise transition-colors capitalize">
+          <h3 className="text-lg md:text-xl font-bold tracking-tight group-hover:text-totes-turquoise transition-colors capitalize">
             {recommendation.title}
           </h3>
         </div>
@@ -43,7 +65,7 @@ const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
           aria-label={isExpanded ? 'Collapse card' : 'Expand card'}
           className={`shrink-0 w-9 h-9 rounded-full border flex items-center justify-center transition-all
             ${isExpanded
-              ? 'bg-punk-rock-pink border-punk-rock-pink text-transparent shadow-[0_0_15px_rgba(255,47,146,0.35)]'
+              ? 'bg-punk-rock-pink border-punk-rock-pink text-brand-text shadow-[0_0_15px_rgba(255,47,146,0.35)]'
               : 'bg-transparent border-punk-rock-pink text-punk-rock-pink hover:shadow-[0_0_12px_rgba(255,47,146,0.35)]'
             }`}
         >
@@ -74,14 +96,27 @@ const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-brand-muted/10 space-y-6">
-                <label className="block text-[10px] font-kumbh font-bold tracking-[0.2em] text-electric-purple/70 uppercase">
-                  Your Status
-                </label>
-                <StatusSelector
-                  currentStatus={userStatus}
-                  onStatusChange={onStatusChange}
-                />
+              <div className="pt-4 border-t border-brand-muted/10 space-y-3">
+                {variant === 'sent' ? (
+                  <>
+                    <label className="block text-[10px] font-kumbh font-bold tracking-[0.2em] text-electric-purple/70 uppercase">
+                      Date Sent
+                    </label>
+                    <p className="text-brand-text/90 text-sm font-light">
+                      {dateSent ?? '—'}
+                    </p>
+                  </>
+                ) : (
+                  <div className="space-y-6">
+                    <label className="block text-[10px] font-kumbh font-bold tracking-[0.2em] text-electric-purple/70 uppercase">
+                      Your Status
+                    </label>
+                    <StatusSelector
+                      currentStatus={userStatus}
+                      onStatusChange={onStatusChange}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
