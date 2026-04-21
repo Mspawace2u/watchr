@@ -1,11 +1,18 @@
-import { updateReactionStatus, saveRating, setRevealViewed, getReactionsByRecommendation } from '../../lib/reactions';
+import { updateReactionStatus, saveRating, setRevealViewed, getReactionsByRecommendation, getAllReactions } from '../../lib/reactions';
 import { getRecommendationById } from '../../lib/recommendations';
 import { notifyRevealReady } from '../../lib/loops';
 
 export const GET = async ({ url }) => {
   try {
     const recId = url.searchParams.get('recId');
-    const data = await getReactionsByRecommendation(recId);
+    // Guide page calls this with no recId — return every reaction row so the
+    // client can map each card to its viewer's status. Without this, the
+    // WHERE clause was `= NULL`, always empty, and uniform-yellow active
+    // state never rendered because `userStatus` fell through to the
+    // 'in_my_queue' default after every click.
+    const data = recId
+      ? await getReactionsByRecommendation(recId)
+      : await getAllReactions();
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }

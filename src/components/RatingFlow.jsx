@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import TacoScale from './TacoScale';
 import HotTakePrompt from './HotTakePrompt';
 import RevealHeader from './RevealHeader';
-import { Heart, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 const GRADIENT_STYLE = {
   backgroundImage:
@@ -184,14 +184,14 @@ const RatingFlow = ({ recId }) => {
               key="complete"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center justify-center py-20 text-center gap-6"
+              className="flex flex-col items-center justify-center text-center gap-6 pt-4"
             >
-              <div className="w-20 h-20 bg-totes-turquoise/20 rounded-full flex items-center justify-center text-totes-turquoise shadow-[0_0_40px_rgba(45,226,230,0.2)]">
-                <Heart size={40} fill="currentColor" />
+              <div className="w-24 h-24 rounded-full flex items-center justify-center text-5xl shadow-[0_0_40px_rgba(45,226,230,0.2)] bg-totes-turquoise/15">
+                <span role="img" aria-label="taco">🌮</span>
               </div>
-              <h2 className="text-3xl font-bold tracking-tight">Reveal Ready!</h2>
-              <p className="text-brand-muted max-w-xs font-light">
-                Your rating and hot take have been locked. The other user has been notified.
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Got It!</h2>
+              <p className="text-brand-text/80 max-w-xs font-light">
+                Tacos and hot take locked. They're on the way to your Watchr right now...
               </p>
               <a href="/guide" className="btn-pill mt-8">SWEET, ALL DONE HERE</a>
             </motion.div>

@@ -4,6 +4,10 @@ export async function getReactionsByRecommendation(recId) {
   return await sql`SELECT * FROM reactions WHERE recommendation_id = ${recId}`;
 }
 
+export async function getAllReactions() {
+  return await sql`SELECT * FROM reactions`;
+}
+
 export async function updateReactionStatus(recId, userId, status) {
   return await safeUpsert({
     table: 'reactions',
