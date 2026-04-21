@@ -137,7 +137,7 @@ const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
                 onClick={() => onChoice(false)}
                 className="btn-pill flex-1"
               >
-                <span>NAW, I'M GOOD</span>
+                <span>NOPE</span>
                 <ThumbsDown
                   size={16}
                   strokeWidth={1.5}
