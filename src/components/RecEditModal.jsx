@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import { X, Tv, Monitor, Film, FileText } from 'lucide-react';
 
@@ -65,7 +66,17 @@ const RecEditModal = ({ recommendation, userId, onClose, onSaved }) => {
   // `{isEditing && <RecEditModal />}` mount — putting it here would dead-code
   // the `exit` props because the whole modal unmounts before AnimatePresence
   // can drive the exit animation.
-  return (
+  //
+  // Rendered through a portal to `document.body` so the `fixed inset-0`
+  // backdrop is always sized to the viewport. Without the portal, Framer
+  // Motion's `layout` prop on the parent GuideCard can apply a `transform`
+  // to an ancestor during sibling-card animations, which per CSS spec turns
+  // that ancestor into the containing block for any `position: fixed`
+  // descendant — and the modal would clip to the card instead of covering
+  // the screen.
+  if (typeof document === 'undefined') return null;
+
+  const modal = (
     <motion.div
       className="fixed inset-0 z-[60] flex items-center justify-center px-4 py-8 bg-brand-bg/80 backdrop-blur-sm"
       initial={{ opacity: 0 }}
@@ -194,6 +205,8 @@ const RecEditModal = ({ recommendation, userId, onClose, onSaved }) => {
       </motion.div>
     </motion.div>
   );
+
+  return createPortal(modal, document.body);
 };
 
 export default RecEditModal;
