@@ -27,11 +27,11 @@ const RecEditModal = ({ recommendation, userId, onClose, onSaved }) => {
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape' && !saving) onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [onClose, saving]);
 
   const update = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -82,7 +82,7 @@ const RecEditModal = ({ recommendation, userId, onClose, onSaved }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      onClick={onClose}
+      onClick={saving ? undefined : onClose}
     >
       <motion.div
         className="w-full max-w-lg bg-brand-bg border border-brand-muted/20 rounded-3xl p-6 md:p-8 max-h-[90vh] overflow-y-auto"
@@ -97,7 +97,8 @@ const RecEditModal = ({ recommendation, userId, onClose, onSaved }) => {
             <button
               type="button"
               onClick={onClose}
-              className="w-9 h-9 rounded-full border border-brand-muted/30 text-brand-muted hover:text-totes-turquoise hover:border-totes-turquoise flex items-center justify-center transition-colors"
+              disabled={saving}
+              className="w-9 h-9 rounded-full border border-brand-muted/30 text-brand-muted hover:text-totes-turquoise hover:border-totes-turquoise flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Close edit dialog"
             >
               <X size={18} strokeWidth={1.5} />
@@ -196,7 +197,8 @@ const RecEditModal = ({ recommendation, userId, onClose, onSaved }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase"
+                disabled={saving}
+                className="text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>

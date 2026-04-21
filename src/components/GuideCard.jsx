@@ -66,6 +66,7 @@ const GuideCard = ({
         setIsConfirmingDelete(false);
         return;
       }
+      setIsDeleting(false);
       setIsConfirmingDelete(false);
       onChanged?.();
     } catch (err) {

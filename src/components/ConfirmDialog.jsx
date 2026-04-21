@@ -11,6 +11,7 @@ const ConfirmDialog = ({
   title,
   message,
   confirmLabel = 'Confirm',
+  busyLabel,
   cancelLabel = 'Cancel',
   confirmTone = 'danger', // 'danger' | 'default'
   onConfirm,
@@ -70,7 +71,7 @@ const ConfirmDialog = ({
             disabled={busy}
             className={`w-full max-w-[260px] inline-flex items-center justify-center px-5 py-3 rounded-full font-urbanist font-bold uppercase tracking-widest text-sm border transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${confirmClass}`}
           >
-            {busy ? 'Deleting…' : confirmLabel}
+            {busy ? (busyLabel ?? `${confirmLabel}…`) : confirmLabel}
           </button>
           <button
             type="button"
