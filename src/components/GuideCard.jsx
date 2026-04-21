@@ -43,8 +43,8 @@ const GuideCard = ({ recommendation, userStatus, onStatusChange }) => {
           aria-label={isExpanded ? 'Collapse card' : 'Expand card'}
           className={`shrink-0 w-9 h-9 rounded-full border flex items-center justify-center transition-all
             ${isExpanded
-              ? 'bg-punk-rock-pink border-punk-rock-pink text-brand-bg shadow-[0_0_15px_rgba(255,47,146,0.35)]'
-              : 'bg-transparent border-totes-turquoise/60 text-totes-turquoise hover:border-totes-turquoise'
+              ? 'bg-punk-rock-pink border-punk-rock-pink text-transparent shadow-[0_0_15px_rgba(255,47,146,0.35)]'
+              : 'bg-transparent border-punk-rock-pink text-punk-rock-pink hover:shadow-[0_0_12px_rgba(255,47,146,0.35)]'
             }`}
         >
           {isExpanded
