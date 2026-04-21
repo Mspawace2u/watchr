@@ -85,7 +85,7 @@ const RevealFlow = ({ recommendation, rating, hotTake, moreLikeThis, onComplete 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="space-y-4 pb-6">
+          <div className="space-y-6 pb-6">
             <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
               The Verdict
             </label>
@@ -107,13 +107,13 @@ const RevealFlow = ({ recommendation, rating, hotTake, moreLikeThis, onComplete 
           </div>
 
           {hotTake && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
                 Hot Take
               </label>
-              <div className="relative bg-brand-bg border border-brand-muted/10 rounded-3xl p-8 pl-14">
+              <div className="relative bg-brand-bg border border-brand-muted/10 rounded-3xl p-8 pl-16">
                 <MessageSquareQuote
-                  className="absolute top-6 left-4 text-highlighter-yellow"
+                  className="absolute top-7 left-5 text-highlighter-yellow pr-1 pb-1"
                   size={28}
                   strokeWidth={1.5}
                   aria-hidden="true"
@@ -130,7 +130,7 @@ const RevealFlow = ({ recommendation, rating, hotTake, moreLikeThis, onComplete 
           )}
 
           {moreLikeThis && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-punk-rock-pink/70 uppercase">
                 More Like This
               </label>
