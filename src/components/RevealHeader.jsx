@@ -16,7 +16,7 @@ const RevealHeader = ({
   onRightClick = null,
 } = {}) => {
   const rightClasses =
-    'group flex items-center gap-1 text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase';
+    'group flex items-center gap-1 text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase';
   const rightInner = (
     <>
       <span>{rightLabel}</span>
@@ -40,7 +40,7 @@ const RevealHeader = ({
             strokeWidth={1.5}
             className="transition-transform group-hover:-translate-x-1"
           />
-          <span className="text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase">
+          <span className="text-[10px] font-kumbh font-bold tracking-[0.2em] uppercase">
             Guide
           </span>
         </a>
@@ -56,7 +56,7 @@ const RevealHeader = ({
         )}
       </div>
 
-      <span className="text-[10px] font-urbanist font-bold tracking-[0.3em] uppercase text-electric-purple/70">
+      <span className="text-[10px] font-kumbh font-bold tracking-[0.3em] uppercase text-electric-purple/70">
         Post-Watch Reveal
       </span>
     </div>

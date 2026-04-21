@@ -71,7 +71,7 @@ const RevealFlow = ({ recommendation, rating, hotTake, onComplete }) => {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="space-y-4">
-             <label className="text-[10px] font-urbanist font-bold tracking-[0.2em] text-brand-muted uppercase">The Verdict</label>
+             <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-brand-muted uppercase">The Verdict</label>
              <div className="bg-totes-turquoise/5 border border-totes-turquoise/20 rounded-3xl p-8 flex flex-col items-center gap-4 text-center">
                 <motion.div 
                   initial={{ scale: 0 }}
@@ -90,7 +90,7 @@ const RevealFlow = ({ recommendation, rating, hotTake, onComplete }) => {
 
           {hotTake && (
             <div className="space-y-4">
-              <label className="text-[10px] font-urbanist font-bold tracking-[0.2em] text-brand-muted uppercase">Hot Take</label>
+              <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-brand-muted uppercase">Hot Take</label>
               <div className="relative bg-brand-bg border border-brand-muted/10 rounded-3xl p-8">
                 <MessageSquareQuote className="absolute top-4 left-4 text-totes-turquoise/20" size={32} />
                 <p className="text-lg md:text-xl font-light italic leading-relaxed text-brand-text/90 relative z-10">
@@ -107,7 +107,7 @@ const RevealFlow = ({ recommendation, rating, hotTake, onComplete }) => {
               >
                 COOL, ADD MY RATING
               </button>
-              <a href="/guide" className="text-center text-[10px] font-urbanist font-bold tracking-[0.2em] text-brand-muted uppercase hover:text-brand-text transition-colors">
+              <a href="/guide" className="text-center text-[10px] font-kumbh font-bold tracking-[0.2em] text-brand-muted uppercase hover:text-brand-text transition-colors">
                 Back to Guide
               </a>
           </div>

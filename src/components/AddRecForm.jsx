@@ -49,10 +49,10 @@ const AddRecForm = () => {
   };
 
   const labelBase =
-    "text-[10px] font-urbanist font-bold tracking-[0.2em] text-electric-purple/70 uppercase flex items-center gap-2";
+    "text-[10px] font-kumbh font-bold tracking-[0.2em] text-electric-purple/70 uppercase flex items-center gap-2";
   const iconClass = "text-brand-text";
   const fieldBase =
-    "w-full bg-brand-bg border border-brand-muted/20 rounded-xl px-4 py-3 focus:outline-none focus:border-punk-rock-pink transition-all font-light";
+    "w-full bg-brand-bg border border-brand-muted/20 rounded-xl px-4 py-3 focus:outline-none focus:border-totes-turquoise transition-all font-light";
 
   return (
     <motion.form
@@ -63,7 +63,7 @@ const AddRecForm = () => {
     >
       {/* TITLE — underline field, no icon */}
       <div className="space-y-4">
-        <label className="text-[10px] font-urbanist font-bold tracking-[0.2em] text-electric-purple/70 uppercase">
+        <label className="text-[10px] font-kumbh font-bold tracking-[0.2em] text-electric-purple/70 uppercase">
           Title
         </label>
         <div className="relative group">
@@ -74,7 +74,7 @@ const AddRecForm = () => {
             value={formData.title}
             onChange={handleChange}
             placeholder="What should we watch?"
-            className="w-full bg-transparent border-b border-brand-muted/30 py-3 text-2xl md:text-3xl focus:outline-none focus:border-punk-rock-pink transition-colors placeholder:text-brand-muted/20 font-light"
+            className="w-full bg-transparent border-b border-brand-muted/30 py-3 text-2xl md:text-3xl focus:outline-none focus:border-totes-turquoise transition-colors placeholder:text-brand-muted/20 font-light"
           />
         </div>
       </div>
@@ -149,7 +149,7 @@ const AddRecForm = () => {
           onChange={handleChange}
           rows={3}
           placeholder="Keep it short, sweet, and spoiler-free."
-          className="w-full bg-brand-bg border border-brand-muted/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-punk-rock-pink transition-all font-light resize-none leading-relaxed"
+          className="w-full bg-brand-bg border border-brand-muted/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-totes-turquoise transition-all font-light resize-none leading-relaxed"
         />
       </div>
 

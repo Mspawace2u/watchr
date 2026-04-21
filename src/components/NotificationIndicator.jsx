@@ -55,7 +55,7 @@ const NotificationIndicator = () => {
         <Bell size={16} fill="currentColor" />
         <span className="absolute -top-1 -right-1 w-2 h-2 bg-totes-turquoise rounded-full animate-ping"></span>
       </div>
-      <span className="text-[10px] font-urbanist font-bold tracking-widest uppercase">
+      <span className="text-[10px] font-kumbh font-bold tracking-widest uppercase">
         {notifications.length} {notifications.length === 1 ? 'Reveal' : 'Reveals'} Ready
       </span>
     </motion.a>

@@ -145,7 +145,7 @@ const RatingFlow = ({ recId }) => {
               className="space-y-10 flex flex-col items-start"
             >
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-brand-text">
-                More like <span className="text-electric-purple">this?</span>
+                More like this?
               </h2>
               <div className="flex gap-6 w-full">
                 <button
