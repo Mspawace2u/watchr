@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Tv, Monitor, Film, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Tv,
+  Monitor,
+  Film,
+  FileText,
+  ChevronDown,
+  ChevronUp,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 import StatusSelector from './StatusSelector';
+import RecEditModal from './RecEditModal';
 
 // `variant` toggles the card between the two /guide sections:
 // - 'received' (Watchr Recs for You): renders the YOUR STATUS selector so
@@ -24,9 +34,40 @@ const GuideCard = ({
   userStatus,
   onStatusChange,
   variant = 'received',
+  recipientStatus = 'in_my_queue',
+  currentUserId = 'A',
+  onChanged,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
   const dateSent = formatDateSent(recommendation.created_at);
+
+  // Edit + delete are only offered on 'sent' cards (the recommender's own
+  // recs) and only while the recipient hasn't started watching yet. Server
+  // enforces the same gate — this is just UX.
+  const canManage = variant === 'sent' && recipientStatus === 'in_my_queue';
+
+  const handleDelete = async () => {
+    if (!window.confirm(`Delete "${recommendation.title}"? This can't be undone.`)) {
+      return;
+    }
+    setDeleteError(null);
+    try {
+      const res = await fetch(
+        `/api/recommendations/${recommendation.id}?userId=${currentUserId}`,
+        { method: 'DELETE' },
+      );
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setDeleteError(data?.error ?? 'Could not delete rec.');
+        return;
+      }
+      onChanged?.();
+    } catch (err) {
+      setDeleteError(err.message);
+    }
+  };
 
   const getTypeIcon = (type) => {
     switch (type) {
@@ -58,22 +99,57 @@ const GuideCard = ({
           </h3>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsExpanded((v) => !v)}
-          aria-expanded={isExpanded}
-          aria-label={isExpanded ? 'Collapse card' : 'Expand card'}
-          className={`shrink-0 w-9 h-9 rounded-full border flex items-center justify-center transition-all
-            ${isExpanded
-              ? 'bg-punk-rock-pink border-punk-rock-pink text-brand-text shadow-[0_0_15px_rgba(255,47,146,0.35)]'
-              : 'bg-transparent border-punk-rock-pink text-punk-rock-pink hover:shadow-[0_0_12px_rgba(255,47,146,0.35)]'
-            }`}
-        >
-          {isExpanded
-            ? <ChevronUp size={18} strokeWidth={2} />
-            : <ChevronDown size={18} strokeWidth={1.5} />}
-        </button>
+        <div className="shrink-0 flex items-center gap-3">
+          {canManage && (
+            <>
+              <button
+                type="button"
+                onClick={() => setIsEditing(true)}
+                aria-label="Edit this rec"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-brand-text hover:text-punk-rock-pink transition-colors"
+              >
+                <Pencil size={16} strokeWidth={1.5} />
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                aria-label="Delete this rec"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-brand-text hover:text-punk-rock-pink transition-colors"
+              >
+                <Trash2 size={16} strokeWidth={1.5} />
+              </button>
+            </>
+          )}
+          <button
+            type="button"
+            onClick={() => setIsExpanded((v) => !v)}
+            aria-expanded={isExpanded}
+            aria-label={isExpanded ? 'Collapse card' : 'Expand card'}
+            className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all
+              ${isExpanded
+                ? 'bg-punk-rock-pink border-punk-rock-pink text-brand-text shadow-[0_0_15px_rgba(255,47,146,0.35)]'
+                : 'bg-transparent border-punk-rock-pink text-punk-rock-pink hover:shadow-[0_0_12px_rgba(255,47,146,0.35)]'
+              }`}
+          >
+            {isExpanded
+              ? <ChevronUp size={18} strokeWidth={2} />
+              : <ChevronDown size={18} strokeWidth={1.5} />}
+          </button>
+        </div>
       </motion.div>
+
+      {deleteError && (
+        <p className="text-punk-rock-pink text-sm font-light mt-3">{deleteError}</p>
+      )}
+
+      {isEditing && (
+        <RecEditModal
+          recommendation={recommendation}
+          userId={currentUserId}
+          onClose={() => setIsEditing(false)}
+          onSaved={() => onChanged?.()}
+        />
+      )}
 
       <AnimatePresence initial={false}>
         {isExpanded && (
