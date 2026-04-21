@@ -92,7 +92,7 @@ const GuideGrid = () => {
     }
   };
 
-  const renderCard = (rec) => {
+  const renderCard = (rec, variant) => {
     const userReaction = reactions.find(
       (r) => r.recommendation_id === rec.id && r.user_id === userId
     );
@@ -102,6 +102,7 @@ const GuideGrid = () => {
         recommendation={rec}
         userStatus={userReaction?.status || 'in_my_queue'}
         onStatusChange={(status) => handleStatusChange(rec.id, status)}
+        variant={variant}
       />
     );
   };
@@ -123,25 +124,29 @@ const GuideGrid = () => {
 
   return (
     <div className="flex flex-col gap-12">
+      {/* Typography hierarchy inverted per session spec: section headlines are
+          larger than card titles + 100% highlighter-yellow, which makes it
+          obvious where to *view what to watch* vs. where to *review what you
+          told others to watch*. */}
       <section className="flex flex-col gap-6">
-        <h2 className="text-xl md:text-2xl font-bold tracking-tight">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-highlighter-yellow">
           Watchr Recs for You
         </h2>
         <div className="grid grid-cols-1 gap-8">
           {recsForYou.length === 0
             ? renderEmpty('No recs for you yet — nudge your human.')
-            : recsForYou.map(renderCard)}
+            : recsForYou.map((rec) => renderCard(rec, 'received'))}
         </div>
       </section>
 
       <section className="flex flex-col gap-6">
-        <h2 className="text-xl md:text-2xl font-bold tracking-tight">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-highlighter-yellow">
           Your Recs to Others
         </h2>
         <div className="grid grid-cols-1 gap-8">
           {recsFromYou.length === 0
             ? renderEmpty("You haven't dropped any recs yet.")
-            : recsFromYou.map(renderCard)}
+            : recsFromYou.map((rec) => renderCard(rec, 'sent'))}
         </div>
       </section>
     </div>
