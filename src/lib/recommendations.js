@@ -25,53 +25,50 @@ export async function getRecommendationById(id) {
   return results[0];
 }
 
-// Edit/delete are gated by the recipient still being in `in_my_queue`. Once
-// the recipient flips to watching/done/no_thanks the recommender loses the
-// right to rewrite history on them. We check ANY non-creator reaction — if
-// one exists and is not `in_my_queue` the gate fails. (A missing row is fine;
-// default status is `in_my_queue`.)
-async function isQueueGateOpen(recId, creatorUserId) {
-  const rows = await sql`
-    SELECT status
-    FROM reactions
-    WHERE recommendation_id = ${recId}
-      AND user_id != ${creatorUserId}
-    LIMIT 1
-  `;
-  if (rows.length === 0) return true;
-  return rows[0].status === 'in_my_queue' || rows[0].status === null;
-}
-
 /**
  * Delete a rec, but only if:
  *   - the requesting user is the rec's creator AND
  *   - the OTHER user's status for it is still `in_my_queue` (or missing).
  *
  * Returns `{ ok: true }` on delete, `{ ok: false, reason }` when gated.
+ *
+ * The queue-gate is folded into the DELETE itself (NOT EXISTS subquery on
+ * `reactions`) so the check and the write are atomic — avoids the TOCTOU
+ * race where the recipient could flip status between a separate check and
+ * a separate write on serverless Postgres.
  */
 export async function deleteRecommendationGated(id, userId) {
   const rec = await getRecommendationById(id);
   if (!rec) return { ok: false, reason: 'not_found' };
   if (rec.created_by_user_id !== userId) return { ok: false, reason: 'forbidden' };
 
-  const open = await isQueueGateOpen(id, userId);
-  if (!open) return { ok: false, reason: 'queue_closed' };
-
-  await sql`DELETE FROM recommendations WHERE id = ${id} AND created_by_user_id = ${userId}`;
+  const rows = await sql`
+    DELETE FROM recommendations
+    WHERE id = ${id}
+      AND created_by_user_id = ${userId}
+      AND NOT EXISTS (
+        SELECT 1 FROM reactions
+        WHERE reactions.recommendation_id = ${id}
+          AND reactions.user_id != ${userId}
+          AND reactions.status IS NOT NULL
+          AND reactions.status != 'in_my_queue'
+      )
+    RETURNING id
+  `;
+  if (rows.length === 0) return { ok: false, reason: 'queue_closed' };
   return { ok: true };
 }
 
 /**
  * Update the editable fields of a rec, gated identically to delete.
  * Does NOT touch the recipient's existing reaction row.
+ *
+ * The gate is enforced atomically inside the UPDATE's WHERE clause.
  */
 export async function updateRecommendationGated(id, userId, patch) {
   const rec = await getRecommendationById(id);
   if (!rec) return { ok: false, reason: 'not_found' };
   if (rec.created_by_user_id !== userId) return { ok: false, reason: 'forbidden' };
-
-  const open = await isQueueGateOpen(id, userId);
-  if (!open) return { ok: false, reason: 'queue_closed' };
 
   const title = typeof patch.title === 'string' ? patch.title.trim() : rec.title;
   const streamer = typeof patch.streamer === 'string' ? patch.streamer.trim() : rec.streamer;
@@ -86,8 +83,17 @@ export async function updateRecommendationGated(id, userId, patch) {
         content_type = ${contentType},
         genre_or_topic = ${genre},
         short_blurb = ${blurb}
-    WHERE id = ${id} AND created_by_user_id = ${userId}
+    WHERE id = ${id}
+      AND created_by_user_id = ${userId}
+      AND NOT EXISTS (
+        SELECT 1 FROM reactions
+        WHERE reactions.recommendation_id = ${id}
+          AND reactions.user_id != ${userId}
+          AND reactions.status IS NOT NULL
+          AND reactions.status != 'in_my_queue'
+      )
     RETURNING *
   `;
+  if (rows.length === 0) return { ok: false, reason: 'queue_closed' };
   return { ok: true, rec: rows[0] };
 }
