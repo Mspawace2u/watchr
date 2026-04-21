@@ -1,12 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import GuideCard from './GuideCard';
+
+// 4-bright palette for the DONE confetti burst.
+const CONFETTI_COLORS = ['#2de2e6', '#9b5cff', '#ff2f92', '#ffe44d'];
+
+const fireDoneConfetti = () => {
+  // Two staggered bursts from just-below-center give a fuller feel on mobile.
+  const base = {
+    particleCount: 70,
+    spread: 70,
+    startVelocity: 40,
+    gravity: 0.9,
+    ticks: 180,
+    origin: { y: 0.7 },
+    colors: CONFETTI_COLORS,
+  };
+  confetti({ ...base, angle: 70, origin: { x: 0.3, y: 0.7 } });
+  confetti({ ...base, angle: 110, origin: { x: 0.7, y: 0.7 } });
+};
 
 const GuideGrid = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [reactions, setReactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Stored so we can cancel the post-DONE redirect if the user changes their
+  // mind to another status within the 1.2s celebration window.
+  const redirectTimer = useRef(null);
 
   const userId = typeof window !== 'undefined' ? (localStorage.getItem('watchr_user') || 'A') : 'A';
+
+  useEffect(() => {
+    return () => {
+      if (redirectTimer.current) {
+        clearTimeout(redirectTimer.current);
+      }
+    };
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -32,6 +62,14 @@ const GuideGrid = () => {
   }, []);
 
   const handleStatusChange = async (recId, newStatus) => {
+    // Cancel any in-flight DONE redirect — if the user hit DONE and then
+    // picked another status inside the 1.2s window, we should NOT whisk them
+    // off to the reveal flow.
+    if (redirectTimer.current) {
+      clearTimeout(redirectTimer.current);
+      redirectTimer.current = null;
+    }
+
     try {
       await fetch('/api/reactions', {
         method: 'POST',
@@ -42,7 +80,12 @@ const GuideGrid = () => {
       fetchData();
 
       if (newStatus === 'done') {
-        window.location.href = `/reveal?id=${recId}`;
+        // Confetti burst + ~1.2s beat so the celebration actually lands
+        // before we whisk the user off to the reveal flow.
+        fireDoneConfetti();
+        redirectTimer.current = setTimeout(() => {
+          window.location.href = `/reveal?id=${recId}`;
+        }, 1200);
       }
     } catch (error) {
       console.error('Failed to update status:', error);
