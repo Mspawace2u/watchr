@@ -12,12 +12,15 @@ const HomeActions = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.1 }}
       >
+        {/* Invisible left spacer keeps text centered when the right icon
+            slot is reserved but hidden at rest. */}
+        <span aria-hidden="true" className="w-4 shrink-0" />
         <span>DROP A REC</span>
         <Mic
           size={16}
           strokeWidth={1.5}
           aria-hidden="true"
-          className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+          className="shrink-0 opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
         />
       </motion.a>
 
@@ -28,12 +31,13 @@ const HomeActions = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2 }}
       >
+        <span aria-hidden="true" className="w-4 shrink-0" />
         <span>VIEW GUIDE</span>
         <Tv
           size={16}
           strokeWidth={1.5}
           aria-hidden="true"
-          className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+          className="shrink-0 opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
         />
       </motion.a>
     </div>

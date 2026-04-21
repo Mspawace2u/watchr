@@ -10,13 +10,13 @@ import { ThumbsUp, ThumbsDown, Mic, Square } from 'lucide-react';
  *
  * Page 4 mic: uses the browser Web Speech API (`SpeechRecognition` /
  * `webkitSpeechRecognition`). Finalized transcript chunks are appended to the
- * textarea; the user can edit before submitting. Unsupported browsers (Firefox,
- * some older Safari) silently hide the mic affordance — the textarea still works.
+ * textarea; the user can edit before submitting. Unsupported browsers (Firefox)
+ * still show the mic button — tapping it surfaces a "needs Chrome/Edge/Safari"
+ * message so the affordance never silently disappears.
  */
 const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
   const [hotTake, setHotTake] = useState('');
   const [isRecording, setIsRecording] = useState(false);
-  const [speechSupported, setSpeechSupported] = useState(false);
   const [micError, setMicError] = useState(null);
   const recognitionRef = useRef(null);
 
@@ -24,7 +24,6 @@ const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
     if (typeof window === 'undefined') return;
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return;
-    setSpeechSupported(true);
 
     const recognition = new SR();
     recognition.continuous = true;
@@ -78,7 +77,10 @@ const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
 
   const toggleRecording = () => {
     const recognition = recognitionRef.current;
-    if (!recognition) return;
+    if (!recognition) {
+      setMicError('Voice capture needs Chrome, Edge, or Safari. Type your take in.');
+      return;
+    }
 
     if (isRecording) {
       recognition.stop();
@@ -155,26 +157,24 @@ const HotTakePrompt = ({ step, onChoice, onSubmit }) => {
                 value={hotTake}
                 onChange={(e) => setHotTake(e.target.value)}
                 placeholder="Type your hot take or record a voice note and AI will jot it in."
-                className="w-full bg-brand-bg border border-brand-muted/20 rounded-2xl px-5 py-4 pr-16 focus:outline-none focus:border-punk-rock-pink transition-all font-light resize-none leading-relaxed min-h-[140px] placeholder:text-brand-muted/40"
+                className="w-full bg-brand-bg border border-brand-muted/20 rounded-2xl px-5 py-4 pr-16 focus:outline-none focus:border-totes-turquoise transition-all font-light resize-none leading-relaxed min-h-[140px] placeholder:text-brand-muted/60"
               />
 
-              {speechSupported && (
-                <button
-                  type="button"
-                  onClick={toggleRecording}
-                  aria-label={isRecording ? 'Stop recording' : 'Start voice note'}
-                  aria-pressed={isRecording}
-                  className={`absolute bottom-3 right-3 w-11 h-11 rounded-full border flex items-center justify-center transition-all
-                    ${isRecording
-                      ? 'bg-punk-rock-pink border-punk-rock-pink text-brand-bg shadow-[0_0_0_6px_rgba(255,47,146,0.15)] animate-pulse'
-                      : 'bg-transparent border-punk-rock-pink/60 text-punk-rock-pink hover:border-punk-rock-pink hover:shadow-[0_0_15px_rgba(255,47,146,0.35)]'
-                    }`}
-                >
-                  {isRecording
-                    ? <Square size={16} strokeWidth={2} fill="currentColor" />
-                    : <Mic size={18} strokeWidth={1.5} />}
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={toggleRecording}
+                aria-label={isRecording ? 'Stop recording' : 'Start voice note'}
+                aria-pressed={isRecording}
+                className={`absolute bottom-3 right-3 w-11 h-11 rounded-full border flex items-center justify-center transition-all
+                  ${isRecording
+                    ? 'bg-punk-rock-pink border-punk-rock-pink text-brand-bg shadow-[0_0_0_6px_rgba(255,47,146,0.15)] animate-pulse'
+                    : 'bg-transparent border-punk-rock-pink text-punk-rock-pink hover:shadow-[0_0_15px_rgba(255,47,146,0.35)]'
+                  }`}
+              >
+                {isRecording
+                  ? <Square size={16} strokeWidth={2} fill="currentColor" />
+                  : <Mic size={18} strokeWidth={1.5} />}
+              </button>
             </div>
 
             {isRecording && (
