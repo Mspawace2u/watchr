@@ -13,7 +13,21 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const RevealHeader = ({
   rightLabel = 'Home',
   rightHref = '/',
+  onRightClick = null,
 } = {}) => {
+  const rightClasses =
+    'group flex items-center gap-1 text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase';
+  const rightInner = (
+    <>
+      <span>{rightLabel}</span>
+      <ChevronRight
+        size={16}
+        strokeWidth={1.5}
+        className="transition-transform group-hover:translate-x-1"
+      />
+    </>
+  );
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-start">
@@ -31,17 +45,15 @@ const RevealHeader = ({
           </span>
         </a>
 
-        <a
-          href={rightHref}
-          className="group flex items-center gap-1 text-brand-muted hover:text-totes-turquoise transition-colors text-[10px] font-urbanist font-bold tracking-[0.2em] uppercase"
-        >
-          <span>{rightLabel}</span>
-          <ChevronRight
-            size={16}
-            strokeWidth={1.5}
-            className="transition-transform group-hover:translate-x-1"
-          />
-        </a>
+        {onRightClick ? (
+          <button type="button" onClick={onRightClick} className={rightClasses}>
+            {rightInner}
+          </button>
+        ) : (
+          <a href={rightHref} className={rightClasses}>
+            {rightInner}
+          </a>
+        )}
       </div>
 
       <span className="text-[10px] font-urbanist font-bold tracking-[0.3em] uppercase text-electric-purple/70">
