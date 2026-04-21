@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { X, Tv, Monitor, Film, FileText } from 'lucide-react';
 
 const CONTENT_TYPES = [
@@ -61,23 +61,26 @@ const RecEditModal = ({ recommendation, userId, onClose, onSaved }) => {
     }
   };
 
+  // NOTE: `AnimatePresence` lives in the parent (GuideCard) around the
+  // `{isEditing && <RecEditModal />}` mount — putting it here would dead-code
+  // the `exit` props because the whole modal unmounts before AnimatePresence
+  // can drive the exit animation.
   return (
-    <AnimatePresence>
+    <motion.div
+      className="fixed inset-0 z-[60] flex items-center justify-center px-4 py-8 bg-brand-bg/80 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
       <motion.div
-        className="fixed inset-0 z-[60] flex items-center justify-center px-4 py-8 bg-brand-bg/80 backdrop-blur-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
+        className="w-full max-w-lg bg-brand-bg border border-brand-muted/20 rounded-3xl p-6 md:p-8 max-h-[90vh] overflow-y-auto"
+        initial={{ scale: 0.96, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.96, opacity: 0 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <motion.div
-          className="w-full max-w-lg bg-brand-bg border border-brand-muted/20 rounded-3xl p-6 md:p-8 max-h-[90vh] overflow-y-auto"
-          initial={{ scale: 0.96, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.96, opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 320, damping: 26 }}
-          onClick={(e) => e.stopPropagation()}
-        >
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl md:text-2xl font-bold tracking-tight">Edit Rec</h2>
             <button
@@ -188,9 +191,8 @@ const RecEditModal = ({ recommendation, userId, onClose, onSaved }) => {
               </button>
             </div>
           </form>
-        </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </motion.div>
   );
 };
 

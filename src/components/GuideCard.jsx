@@ -142,14 +142,16 @@ const GuideCard = ({
         <p className="text-punk-rock-pink text-sm font-light mt-3">{deleteError}</p>
       )}
 
-      {isEditing && (
-        <RecEditModal
-          recommendation={recommendation}
-          userId={currentUserId}
-          onClose={() => setIsEditing(false)}
-          onSaved={() => onChanged?.()}
-        />
-      )}
+      <AnimatePresence>
+        {isEditing && (
+          <RecEditModal
+            recommendation={recommendation}
+            userId={currentUserId}
+            onClose={() => setIsEditing(false)}
+            onSaved={() => onChanged?.()}
+          />
+        )}
+      </AnimatePresence>
 
       <AnimatePresence initial={false}>
         {isExpanded && (
